@@ -1,17 +1,13 @@
-import { useState, useCallback, useEffect } from 'react'
-
-import ScoreParser from './ScoreParser';
+import { useState, useCallback } from 'react'
 
 import xmlJs from 'xml-js';
 import Dropzone from 'react-dropzone';
 
-// todo scrap this and just parse from stats.xml
+function ScoreUpload(props: any) {
 
-function ScoreUpload() {
-
-	const [statsFile, setStatsFile] = useState<any>(''); // typescript does not like filereader
 	const [parsedStats, setParsedStats] = useState<Score[]>([]);
 
+	// TODO: add user (for fkey for postgres db)
 	interface Score {
 		id:					number; // score id?
 		title:				string;	// dunno if artist/subtitle are super necessary rn, that can be handled on db side
@@ -45,8 +41,8 @@ function ScoreUpload() {
 					// TODO: Change this to "Waffle Timing League"
 					if (song["_attributes"]["Dir"].includes("ITL Online 2024")) {
 						const title: string = song["_attributes"]["Dir"].split("/")[2];
-						console.log(song["_attributes"]["Dir"]);
-						console.log(song["Steps"]["HighScoreList"]["HighScore"]);
+						//console.log(song["_attributes"]["Dir"]);
+						//console.log(song["Steps"]["HighScoreList"]["HighScore"]);
 
 						const score = song["Steps"]["HighScoreList"]["HighScore"]
 						if (score) {
@@ -89,7 +85,22 @@ function ScoreUpload() {
 					}
 					scoreId = scoreId += 1 // this is temp and stupid but i might keep it so react doesnt yell at me for children without unique keys
 				})
-				setParsedStats(tournamentScores);
+
+				fetch('http://localhost:3001/scores', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(tournamentScores),
+					})
+					.then(response => {
+						return response.text();
+					})
+					.then(data => {
+						console.log(data);
+				});
+
+				//setParsedStats(tournamentScores);
 				//console.log(scores);
             })
             .catch((error) => {
@@ -127,7 +138,7 @@ function ScoreUpload() {
 					)}
 				</Dropzone>
 
-				{parsedStats.map((score) => {
+				{/*parsedStats.map((score) => {
 					const dpGained: number = (score.w1 * 3.5) + (score.w2 * 3) + (score.w3 * 2) + (score.w4 * 1) + (score.holdsHit * 1) - (score.minesHit * 1);
 					const dpTotal: number = (+score.w1 + +score.w2 + +score.w3 + +score.w4 + +score.w5 + +score.w6 + +score.w7) * 3.5 + +score.holdsHit; // java fucking script
 					const dpPercent = (dpGained / dpTotal * 100).toFixed(2);
@@ -138,7 +149,7 @@ function ScoreUpload() {
 							<p>{dpPercent}</p>
 						</div>
 					)
-				})}
+				})*/}
 			</div>
 		</>
 	)

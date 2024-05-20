@@ -1,10 +1,10 @@
-import ScoreUpload from './components/ScoreUpload';
+import ScoresPage from './components/ScoresPage';
 
 function App() {
   return (
     <>
       <div>
-        <ScoreUpload />
+        <ScoresPage />
       </div>
     </>
   )
