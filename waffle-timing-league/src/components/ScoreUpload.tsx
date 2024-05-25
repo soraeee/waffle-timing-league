@@ -86,7 +86,7 @@ function ScoreUpload(props: any) {
 					scoreId = scoreId += 1 // this is temp and stupid but i might keep it so react doesnt yell at me for children without unique keys
 				})
 
-				fetch('http://localhost:3001/scores', {
+				fetch('http://localhost:3001/api/scores/addscores', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
