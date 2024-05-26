@@ -17,32 +17,43 @@ function ScoresPage () {
 		w6:					number;	// way off
 		w7:					number;	// miss
 
-		holdsHit:			number; // includes rolls
-		minesHit:			number;
+		holdshit:			number; // includes rolls
+		mineshit:			number;
 		date:				string; // fuck it, we ball
 	}
 
 	const [scores, setScores] = useState<Score[]>([]);
 	
 	function getScores() {
-		fetch('http://localhost:3001')
+		fetch('http://localhost:3001/api/scores/getscores')
 		.then(response => {
 			return response.text();
 		})
 		.then(data => {
-			const obj = JSON.parse(data);
-			console.log(obj);
-			//setScores();
+			const obj: Score[] = JSON.parse(data);
+			//console.log(obj);
+			setScores(obj);
 		});
 	}
 
 	useEffect(() => {
 		getScores();
-	}, []) // TODO: change dependency array so it only updates when state "scores" is updated
+	}, [])
 
 	return (
 		<>
-			<ScoreUpload getScores = {getScores}/>
+			<p>this is the scores page !</p>
+			{scores.map((score) => {
+				const dpGained: number = (score.w1 * 3.5) + (score.w2 * 3) + (score.w3 * 2) + (score.w4 * 1) + (score.holdshit * 1) - (score.mineshit * 1);
+				const dpTotal: number = (+score.w1 + +score.w2 + +score.w3 + +score.w4 + +score.w5 + +score.w6 + +score.w7) * 3.5 + +score.holdshit; // java fucking script
+				const dpPercent = (dpGained / dpTotal * 100).toFixed(2);
+				return (
+					<div key = {score.id}>
+						<p>{score.title}</p>
+						<p>{dpPercent}%</p>
+					</div>
+				)
+			})}
 		</>
 	)
 }

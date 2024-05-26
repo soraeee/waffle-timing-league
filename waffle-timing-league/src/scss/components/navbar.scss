@@ -1,0 +1,7 @@
+@use '../util/mixins' as mixin;
+
+.navbar {
+	@include mixin.flex($dir: row, $gap: 20px);
+	font-size: 1.1em;
+	margin: 20px;
+}

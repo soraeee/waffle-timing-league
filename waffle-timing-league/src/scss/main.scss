@@ -1,2 +1,14 @@
 @use 'util/reset';
 @use 'components/scoreupload';
+@use 'components/navbar';
+@use 'util/color';
+
+html {
+	scroll-behavior: smooth;
+	color: color.$lite;
+	background-color: color.$dark;
+}
+
+.main {
+	display: grid;
+}

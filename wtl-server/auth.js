@@ -67,7 +67,7 @@ const signup = (req, res) => {
 	user.create({
 		username: req.body.username,
 		email: req.body.email,
-		password: bcrypt.hashSync(req.body.password, 8) // doesn't salt need to be stored with hash too? 
+		password: bcrypt.hashSync(req.body.password, 8)
 	})
 		.then(user => {
 			// default to "user" role
