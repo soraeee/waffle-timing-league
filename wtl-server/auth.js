@@ -62,6 +62,47 @@ const verifyToken = (req, res, next) => {
 		});
 };
 
+const getUserInfo = (req, res) => {
+	let token = req.headers["x-access-token"];
+
+	jwt.verify(token,
+		process.env.JWT_SECRET,
+		(err, decoded) => {
+			if (err) {
+				console.log(err);
+				return res.status(401).send({
+					message: "Not a valid token",
+				});
+			}
+			req.userId = decoded.id;
+			user.findOne({
+				where: {
+					id: req.userId
+				}
+			}).then(user => {
+				if (!user) {
+					return res.status(404).send({ message: "User not found." });
+				}
+	
+				var authorities = [];
+				user.getRoles().then(roles => {
+					for (let i = 0; i < roles.length; i++) {
+						authorities.push("ROLE_" + roles[i].name.toUpperCase());  // what?
+					}
+					res.status(200).send({
+						id: user.id,
+						username: user.username,
+						roles: authorities,
+						accessToken: token
+					});
+				});
+			})
+			.catch(err => {
+				res.status(500).send({ message: err.message });
+			});
+		});
+}
+
 const signup = (req, res) => {
 	// Save User to Database
 	user.create({
@@ -80,6 +121,7 @@ const signup = (req, res) => {
 		});
 };
 
+// TODO replace this with passport.js probably
 const signin = (req, res) => {
 	user.findOne({
 		where: {
@@ -88,7 +130,7 @@ const signin = (req, res) => {
 	})
 		.then(user => {
 			if (!user) {
-				return res.status(404).send({ message: "User Not found." });
+				return res.status(404).send({ message: "User not found." });
 			}
 
 			var passwordIsValid = bcrypt.compareSync(
@@ -119,7 +161,6 @@ const signin = (req, res) => {
 				res.status(200).send({
 					id: user.id,
 					username: user.username,
-					email: user.email,
 					roles: authorities,
 					accessToken: token
 				});
@@ -135,4 +176,5 @@ module.exports = {
 	verifyToken,
 	signup,
 	signin,
+	getUserInfo,
 };
