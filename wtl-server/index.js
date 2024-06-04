@@ -44,6 +44,7 @@ app.post("/api/auth/signin", auth.signin);
 
 app.get("/api/auth/getuser", auth.getUserInfo);
 
+// User routes
 app.get("/api/profile/getuser", users.getPublicUserInfo);
 app.get("/api/profile/getuserlist", users.getUserList);
 

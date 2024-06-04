@@ -29,6 +29,9 @@ const addScores = async (req, res) => {
 	const uid = req.body[0].uid;
 	let dateCutoff;
 
+	// Previous values for comparison later
+	let oldAcc;
+
 	let updatedScores = [];
 	let scoresreq = req.body;
 
@@ -39,7 +42,7 @@ const addScores = async (req, res) => {
 			return res.status(404).send({ message: "Invalid user id when submitting scores (this shouldn't happen lol)" });
 		}
 		dateCutoff = new Date(user.dataValues["last_submit_date"]);
-		console.log(dateCutoff);
+		oldAcc = user.accuracy;
 
 		// Parse through all scores in the request
 		await Promise.all(scoresreq.map(async (score) => {
@@ -54,8 +57,7 @@ const addScores = async (req, res) => {
 
 			// Check if notecount is correct, and that there aren't more holds/rolls or mines hit than there are in the chart
 			// Also checks if the chart even exists in the tournament
-			const scoreNotecount = (+w1 + +w2 + +w3 + +w4 + +w5 + +w6 + +w7)
-			
+			const scoreNotecount = (+w1 + +w2 + +w3 + +w4 + +w5 + +w6 + +w7);	
 			const curChart = await chartsdb.findOne({
 				where: {
 					folder_title: folderTitle
@@ -136,16 +138,36 @@ const addScores = async (req, res) => {
 				folderTitle: folderTitle,
 				scoreDiff: dpPercent,
 			})
-			console.log(updatedScores);
+			//console.log(updatedScores);
 		}))
 
+		// Calculate new accuracy (should be used to recalc RP too)
+		let scoreCount = 0;
+		let totalPercent = 0;
+		const allScores = await scoresdb.findAll({
+			where: {
+				user_id: uid
+			}
+		});
+		allScores.map((score) => {
+			scoreCount += 1;
+			totalPercent += +score.dataValues["dp_percent"];
+		});
+		console.log(Math.floor(totalPercent / scoreCount * 100) / 100);
+		await userdb.update({
+			accuracy: Math.floor(totalPercent / scoreCount * 100) / 100
+		},
+		{
+			where: {
+				id: uid
+			}
+		});
+
 		// Send response after all scores are processed
-		console.log(JSON.stringify(updatedScores));
 		res.status(200).send({
 			updates: updatedScores
 		})
-		console.log("AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA")
-	} catch {
+	} catch (err) {
 		res.status(500).send({ message: err.message });
 	}
 }

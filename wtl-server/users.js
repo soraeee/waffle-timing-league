@@ -1,13 +1,22 @@
 require('dotenv').config()
+const { QueryTypes } = require('sequelize');
 const db = require("./models");
 const userdb = db.user;
+const sequelize = db.sequelize;
 
 const getPublicUserInfo = (req, res) => {
-	userdb.findOne({
-		where: {
-			id: req.query.id
-		}
-	}).then(user => {
+	sequelize.query(
+		`SELECT * from (
+			SELECT * ,
+			RANK () OVER ( 
+				ORDER BY total_points DESC
+			) ranking
+			from users
+		)
+		WHERE id = :id;`, // oh no
+		{replacements: {id: req.query.id}},
+	).then(data => {
+		const user = data[0][0];
 		if (!user) {
 			return res.status(404).send({ message: "User not found." });
 		}
@@ -15,7 +24,10 @@ const getPublicUserInfo = (req, res) => {
 			id: user.id,
 			username: user.username,
 			pfp: user.pfp,
+			title: user.title,
 			totalPoints: user.total_points,
+			accuracy: user.accuracy,
+			rank: Number(user.ranking),
 		});
 	})
 	.catch(err => {
@@ -26,7 +38,7 @@ const getPublicUserInfo = (req, res) => {
 const getUserList = (req, res) => {
 	userdb.findAll({
 		order: [['total_points', 'DESC']],
-		attributes: ['id', 'username', 'total_points', 'pfp']
+		attributes: ['id', 'username', 'total_points', 'pfp', 'title', 'accuracy']
 	}).then(data => {
 		if (data.length == 0) {
 			return res.status(404).send({ message: "No users found." });

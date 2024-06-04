@@ -12,8 +12,17 @@
 		@include mixin.flex($dir: column, $gap: 10px, $x-align: flex-start, $align: flex-start);
 		&-row {
 			@include mixin.flex($dir: row, $gap: 300px, $x-align: center, $align: space-evenly);
+			
 			&-user {
-				@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: space-evenly);
+				@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);
+				min-width: 300px;
+			}
+			&-stats {
+				@include mixin.flex($dir: row, $gap: 20px, $x-align: flex-start, $align: space-evenly);
+			}
+			&-stats > p {
+				width: 200px;
+				text-align: left;
 			}
 			&-user > img {
 				width: 30px;

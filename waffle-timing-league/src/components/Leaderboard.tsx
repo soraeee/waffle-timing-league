@@ -54,7 +54,9 @@ function Leaderboard () {
 								<img src = {user.pfp}></img>
 								<NavLink to = {'/profile/' + user.id}><p>{user.username}</p></NavLink>
 							</div>
-							<p>{user.points}</p>
+							<div className = "leaderboard-list-row-stats">
+								<p>{user.points} pts.</p>
+							</div>
 						</div>
 					)
 				})}

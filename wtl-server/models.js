@@ -36,13 +36,24 @@ const user = sequelize.define("users", {
 	last_submit_date: {
 		type: DataTypes.DATE
 	},
+
 	total_points: {
 		type: DataTypes.INTEGER
 	},
+	accuracy: {
+		type: DataTypes.DECIMAL,
+		defaultValue: 0.00,
+	},
+
 	pfp: {
 		type: DataTypes.STRING,
 		defaultValue: "https://i.imgur.com/scPEALU.png" // dorrie
 	},
+	title: {
+		type: DataTypes.STRING,
+		defaultValue: "WTL Participant"
+	},
+
 	isAdmin: {
 		type: DataTypes.BOOLEAN,
 		defaultValue: false,

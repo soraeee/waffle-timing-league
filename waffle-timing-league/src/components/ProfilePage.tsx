@@ -26,7 +26,10 @@ function ProfilePage (props: any) {
 		id:					number;
 		username:			string;
 		pfp:				string;
+		title:				string;
 		points:				number;
+		accuracy:			number;
+		rank:			number;
 	}
 
 	const [scores, setScores] = useState<Score[]>([]);
@@ -34,7 +37,10 @@ function ProfilePage (props: any) {
 		id:			-1,
 		username:	'lol',
 		pfp:		'https://i.imgur.com/scPEALU.png',
-		points:		0
+		title:		'test title please ignore',
+		points:		0,
+		accuracy:	0.00,
+		rank:		-1,
 	});
 	let params = useParams();
 	
@@ -84,7 +90,10 @@ function ProfilePage (props: any) {
 				id:			obj.id,
 				username:	obj.username,
 				pfp:		obj.pfp,
-				points:		obj.totalPoints
+				title:		obj.title,
+				points:		obj.totalPoints,
+				accuracy:	obj.accuracy,
+				rank:		obj.rank,
 			})
 		});
 	}
@@ -102,14 +111,14 @@ function ProfilePage (props: any) {
 					<div className = "profile-header-column-left">
 						<div className = "profile-userinfo">
 							<p className = "profile-username">{user.username}</p>
-							<p className = "profile-title">test title please remove</p>
+							<p className = "profile-title">{user.title}</p>
 							<img src = {user.pfp} className = "profile-pfp"></img>
 						</div>
 					</div>
 					<div className = "profile-header-column-right">
 						<div className = "profile-stats">
 							<p className = "profile-stats-title">rank</p>
-							<p className = "profile-stats-value">#-1</p>
+							<p className = "profile-stats-value">#{user.rank}</p>
 						</div>
 						<div className = "profile-stats">
 							<p className = "profile-stats-title">points</p>
@@ -117,7 +126,7 @@ function ProfilePage (props: any) {
 						</div>
 						<div className = "profile-stats">
 							<p className = "profile-stats-title">accuracy</p>
-							<p className = "profile-stats-value">99.69%</p>
+							<p className = "profile-stats-value">{user.accuracy}%</p>
 						</div>
 						<div className = "profile-stats">
 							<p className = "profile-stats-title">plays</p>
