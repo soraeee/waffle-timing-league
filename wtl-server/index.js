@@ -42,12 +42,13 @@ app.post("/api/auth/signup", [auth.checkDuplicateUsername], auth.signup);
 app.post("/api/auth/signin", auth.signin);
 
 app.get("/api/auth/getuser", auth.getUserInfo);
+app.get("/api/profile/getuser", auth.getPublicUserInfo);
 
-const userBoard = (req, res) => { // Temp, should probably be moved to auth.js as "checkLoggedIn" and invoked on frontend when user attempts to access page requiring login
+/*const userBoard = (req, res) => { // Temp, should probably be moved to auth.js as "checkLoggedIn" and invoked on frontend when user attempts to access page requiring login
 	res.status(200).send("User Content.");
 };
 
-app.get("/api/test/user", [auth.verifyToken], userBoard);
+app.get("/api/test/user", [auth.verifyToken], userBoard);*/
 
 // Scores routes
 app.get('/api/scores/getscores', scores.getScores)

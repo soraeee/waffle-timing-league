@@ -27,7 +27,6 @@ const chartsdb = db.charts;
 
 // TODO: probably include the rest of the chart metadata in each score too?
 const getScores = (req, res) => {
-	console.log(req.query.id)
 	scoresdb.findAll({
 		where: {
 			user_id: req.query.id

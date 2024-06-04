@@ -1,0 +1,45 @@
+@use '../util/mixins' as mixin;
+
+.profile {
+	&-header {
+		@include mixin.flex($dir: row, $gap: 100px);
+		margin-top: 20px;
+		margin-bottom: 20px;
+			
+		&-column-left {
+			@include mixin.flex($dir: column, $gap: 20px, $x-align: flex-end, $align: flex-start);
+		}
+		&-column-right {
+			@include mixin.flex($dir: column, $gap: 25px, $x-align: flex-start, $align: flex-end);
+		}
+	}
+
+	&-username {
+		font-size: 3em;
+		font-weight: 600;
+	}
+	&-title {
+		font-size: 1em;
+		font-weight: 400;
+		font-style: italic;
+	}
+
+	&-userinfo {
+		@include mixin.flex($dir: column, $gap: 10px, $x-align: center, $align: flex-start);
+	}
+
+	&-pfp {
+		max-width: 200px;
+		max-height: 200px;
+		border-radius: 5px;
+	}
+
+	&-stats {
+		@include mixin.flex($dir: column, $gap: 10px, $x-align: flex-start, $align: flex-start);
+
+		&-title {
+			font-size: 1.4em;
+			font-weight: 600;
+		}
+	}
+}

@@ -15,13 +15,13 @@ function Login(props: any) {
 		pass: ""
 	});
 
-	function handleChange(event: any) {
+	const handleChange = (event: any) => {
 		const name = event.target.name;
 		const value = event.target.value;
 		setCreds((values: any) => ({ ...values, [name]: value }))
 	}
 
-	function handleLogin(event: any) {
+	const handleLogin = (event: any) => {
 		event.preventDefault();
 
 		fetch('http://localhost:3001/api/auth/signin', {

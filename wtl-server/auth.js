@@ -81,6 +81,27 @@ const getUserInfo = (req, res) => {
 		});
 }
 
+const getPublicUserInfo = (req, res) => {
+	userdb.findOne({
+		where: {
+			id: req.query.id
+		}
+	}).then(user => {
+		if (!user) {
+			return res.status(404).send({ message: "User not found." });
+		}
+		res.status(200).send({
+			id: user.id,
+			username: user.username,
+			pfp: user.pfp,
+			totalPoints: user.total_points,
+		});
+	})
+	.catch(err => {
+		res.status(500).send({ message: err.message });
+	});
+}
+
 const signup = (req, res) => {
 	userdb.create({
 		username: req.body.username,
@@ -145,4 +166,5 @@ module.exports = {
 	signup,
 	signin,
 	getUserInfo,
+	getPublicUserInfo,
 };

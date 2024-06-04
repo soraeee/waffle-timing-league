@@ -22,10 +22,23 @@ function ProfilePage (props: any) {
 		uid:				number;	// user id of the uploader
 	}
 
+	interface User {
+		id:					number;
+		username:			string;
+		pfp:				string;
+		points:				number;
+	}
+
 	const [scores, setScores] = useState<Score[]>([]);
+	const [user, setUser] = useState<User>({
+		id:			-1,
+		username:	'lol',
+		pfp:		'https://i.imgur.com/scPEALU.png',
+		points:		0
+	});
 	let params = useParams();
 	
-	function getScores() {
+	const getScores = () => {
 		fetch('http://localhost:3001/api/scores/getscores?id=' + params.id, {
 			method: 'GET',
 		})
@@ -34,7 +47,6 @@ function ProfilePage (props: any) {
 		})
 		.then(data => {
 			const obj = JSON.parse(data);
-			console.log(obj)
 			const parsedScores: Score[] = obj.scores.map((score: any) => {
 				return {
 					id:				score.id,
@@ -59,21 +71,74 @@ function ProfilePage (props: any) {
 		});
 	}
 
+	const getUser = () => {
+		fetch('http://localhost:3001/api/profile/getuser?id=' + params.id, {
+			method: 'GET',
+		})
+		.then(response => {
+			return response.text();
+		})
+		.then(data => {
+			const obj = JSON.parse(data);
+			setUser({
+				id:			obj.id,
+				username:	obj.username,
+				pfp:		obj.pfp,
+				points:		obj.totalPoints
+			})
+		});
+	}
+
 	useEffect(() => {
 		getScores();
+		getUser();
 	}, [])
 
 	return (
 		<>
-			<p>this is the scores page !</p>
-			{scores.map((score) => {
-				return (
-					<div key = {score.id}>
-						<p>{score.folderTitle}</p>
-						<p>{score.dpPercent}%</p>
+			{(user.id != -1)
+			? <>
+				<div className = "profile-header">
+					<div className = "profile-header-column-left">
+						<div className = "profile-userinfo">
+							<p className = "profile-username">{user.username}</p>
+							<p className = "profile-title">test title please remove</p>
+							<img src = {user.pfp} className = "profile-pfp"></img>
+						</div>
 					</div>
-				)
-			})}
+					<div className = "profile-header-column-right">
+						<div className = "profile-stats">
+							<p className = "profile-stats-title">rank</p>
+							<p className = "profile-stats-value">#-1</p>
+						</div>
+						<div className = "profile-stats">
+							<p className = "profile-stats-title">points</p>
+							<p className = "profile-stats-value">{user.points}</p>
+						</div>
+						<div className = "profile-stats">
+							<p className = "profile-stats-title">accuracy</p>
+							<p className = "profile-stats-value">99.69%</p>
+						</div>
+						<div className = "profile-stats">
+							<p className = "profile-stats-title">plays</p>
+							<p className = "profile-stats-value">69420</p>
+						</div>
+					</div>
+				</div>
+				<p>scores:</p>
+				{scores.map((score) => {
+					return (
+						<div key = {score.id}>
+							<p>{score.folderTitle}</p>
+							<p>{score.dpPercent}%</p>
+						</div>
+					)
+				})}
+			</>
+			
+			: <>
+				<p>Loading... (replace this later lol!)</p>
+			</>}
 		</>
 	)
 }

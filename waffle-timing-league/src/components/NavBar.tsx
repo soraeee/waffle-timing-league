@@ -7,7 +7,7 @@ function NavBar (props: any) {
 	const navigate = useNavigate();
 
 	// TODO make this wipe the localstorage auth key
-	function logout() {
+	const logout = () => {
 		props.setLoginInfo({
 			loggedIn: false,
 			user: "",
