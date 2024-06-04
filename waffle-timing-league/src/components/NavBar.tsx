@@ -21,7 +21,7 @@ function NavBar (props: any) {
 
 	return (
 		<div className = "navbar">
-			<p>wafl timing league logo</p>
+			<NavLink to = '/'><p>wafl timing league logo</p></NavLink>
 			<NavLink to = '/'><p>home</p></NavLink>
 			<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
 			{props.loginInfo.loggedIn

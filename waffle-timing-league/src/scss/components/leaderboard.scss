@@ -16,8 +16,10 @@
 				@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: space-evenly);
 			}
 			&-user > img {
-				max-width: 30px;
-				max-height: 30px;
+				width: 30px;
+				height: 30px;
+				object-fit: cover;
+				border-radius: 5px;
 			}
 		}
 	}

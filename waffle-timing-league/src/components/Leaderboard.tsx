@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
 function Leaderboard () {
 
@@ -51,7 +52,7 @@ function Leaderboard () {
 							<div className = "leaderboard-list-row-user">
 								<p>#{user.rank}</p>
 								<img src = {user.pfp}></img>
-								<p>{user.username}</p>
+								<NavLink to = {'/profile/' + user.id}><p>{user.username}</p></NavLink>
 							</div>
 							<p>{user.points}</p>
 						</div>
