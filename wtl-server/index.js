@@ -7,6 +7,7 @@ const port = 3001;
 const scores = require('./scores');
 const charts = require('./charts');
 const auth = require('./auth');
+const users = require('./users');
 
 const corsOptions = {
 	origin: "http://localhost:5173"
@@ -42,7 +43,9 @@ app.post("/api/auth/signup", [auth.checkDuplicateUsername], auth.signup);
 app.post("/api/auth/signin", auth.signin);
 
 app.get("/api/auth/getuser", auth.getUserInfo);
-app.get("/api/profile/getuser", auth.getPublicUserInfo);
+
+app.get("/api/profile/getuser", users.getPublicUserInfo);
+app.get("/api/profile/getuserlist", users.getUserList);
 
 /*const userBoard = (req, res) => { // Temp, should probably be moved to auth.js as "checkLoggedIn" and invoked on frontend when user attempts to access page requiring login
 	res.status(200).send("User Content.");

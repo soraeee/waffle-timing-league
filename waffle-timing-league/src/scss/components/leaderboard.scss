@@ -1,0 +1,25 @@
+@use '../util/mixins' as mixin;
+.leaderboard {
+	@include mixin.flex($dir: column, $gap: 30px, $x-align: center, $align: flex-start);
+	
+	&-title {
+		margin-top: 20px;
+		font-size: 3.5em;
+		font-weight: 800;
+	}
+
+	&-list {
+		@include mixin.flex($dir: column, $gap: 10px, $x-align: flex-start, $align: flex-start);
+		&-row {
+			@include mixin.flex($dir: row, $gap: 300px, $x-align: center, $align: space-evenly);
+			&-user {
+				@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: space-evenly);
+			}
+			&-user > img {
+				max-width: 30px;
+				max-height: 30px;
+			}
+		}
+	}
+
+}

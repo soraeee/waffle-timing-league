@@ -4,6 +4,7 @@ const pack = require("./pack.json");
 
 const chartsdb = db.charts;
 
+// Should be only run once after truncating the charts table (probably will add duplicate charts if you run it more than once)
 const createCharts = () => {
 	pack.charts.forEach(chart => {
 		let cr = chart.difficulties[0].credit;

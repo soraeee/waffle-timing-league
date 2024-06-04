@@ -66,7 +66,7 @@ function ProfilePage (props: any) {
 					date:			new Date(score.date),
 					uid:			score.user_id,
 				}
-			})
+			});
 			setScores(parsedScores);
 		});
 	}

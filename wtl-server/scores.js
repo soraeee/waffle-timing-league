@@ -5,26 +5,6 @@ const scoresdb = db.scores;
 const chartsdb = db.charts;
 
 // get scores
-/*const getScores = async () => {
-	try {
-		return await new Promise(function (resolve, reject) {
-			pool.query("SELECT * FROM scores", (error, results) => {
-				if (error) {
-					reject(error);
-				}
-				if (results && results.rows) {
-					resolve(results.rows);
-				} else {
-					reject(new Error("No results found"));
-				}
-			});
-		});
-	} catch (error_1) {
-		console.error(error_1);
-		throw new Error("Internal server error");
-	}
-};*/
-
 // TODO: probably include the rest of the chart metadata in each score too?
 const getScores = (req, res) => {
 	scoresdb.findAll({
@@ -44,6 +24,7 @@ const getScores = (req, res) => {
 // add score
 // TODO: prob return the actual chart title instead of the folder title
 // TODO: calc ranking points for the score, and also send the amount of RP gain through the response
+// TODO: update cutoff date
 const addScores = async (req, res) => {
 	const uid = req.body[0].uid;
 	let dateCutoff;
@@ -72,6 +53,7 @@ const addScores = async (req, res) => {
 			}
 
 			// Check if notecount is correct, and that there aren't more holds/rolls or mines hit than there are in the chart
+			// Also checks if the chart even exists in the tournament
 			const scoreNotecount = (+w1 + +w2 + +w3 + +w4 + +w5 + +w6 + +w7)
 			
 			const curChart = await chartsdb.findOne({
