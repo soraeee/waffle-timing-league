@@ -2,7 +2,7 @@ import NavBar from './components/NavBar';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import ScoresPage from './components/ScoresPage';
+import ProfilePage from './components/ProfilePage';
 import HomePage from './components/HomePage';
 import ScoreUpload from './components/ScoreUpload';
 import Leaderboard from './components/Leaderboard';
@@ -14,6 +14,7 @@ function App() {
 		loggedIn: boolean,
 		user: string,
 		id: number,
+		isAdmin: boolean,
 		accessToken: string
 	}
 
@@ -22,6 +23,7 @@ function App() {
 		loggedIn: false,
 		user: "",
 		id: -1,
+		isAdmin: false,
 		accessToken: ""
 	});
 
@@ -41,6 +43,7 @@ function App() {
 					.then(response => {
 						if (!response.ok) {
 							console.log("Local storage login failed (expired access token?)")
+							localStorage.setItem('accessToken', ""); // Wipe the access token?
 							throw new Error("HTTP status " + response.status);
 						}
 						return response.json();
@@ -50,10 +53,10 @@ function App() {
 							loggedIn: true,
 							user: data.username,
 							id: data.id,
+							isAdmin: data.isAdmin,
 							accessToken: data.accessToken
 						})
 						localStorage.setItem('accessToken', data.accessToken); // i don't know if this is a good idea but who cares
-						console.log(data);
 				});
 		}
 	}, [])
@@ -64,10 +67,10 @@ function App() {
 				<NavBar loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} />
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/login" element={<Login setLoginInfo={setLoginInfo} />} />
+					<Route path="/login" element={<Login setLoginInfo = {setLoginInfo} />} />
 					<Route path="/leaderboard" element={<Leaderboard />} />
-					<Route path="/submit" element={<ScoreUpload />} />
-					<Route path="/scores" element={<ScoresPage />} /> {/* needs to be "/scores/:id" later*/}
+					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} />} />
+					<Route path="/profile/:id" element={<ProfilePage loginInfo = {loginInfo}/>} />
 				</Routes>
 			</BrowserRouter>
 		</div>

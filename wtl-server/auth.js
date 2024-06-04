@@ -3,13 +3,12 @@ const db = require("./models");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const roles = db.roles;
-const user = db.user;
+const userdb = db.user;
 
 // const op = db.sequelize.Op;
 
 const checkDuplicateUsername = (req, res, next) => {
-	// Username
-	user.findOne({
+	userdb.findOne({
 		where: {
 			username: req.body.username
 		}
@@ -23,22 +22,6 @@ const checkDuplicateUsername = (req, res, next) => {
 		next();
 	});
 };
-
-// do i really need this?
-/*checkRolesExisted = (req, res, next) => {
-	if (req.body.roles) {
-		for (let i = 0; i < req.body.roles.length; i++) {
-			if (!roles.includes(req.body.roles[i])) {
-				res.status(400).send({
-					message: "Failed! Role does not exist = " + req.body.roles[i]
-				});
-				return;
-			}
-		}
-	}
-
-	next();
-};*/
 
 const verifyToken = (req, res, next) => {
 	let token = req.headers["x-access-token"];
@@ -62,6 +45,7 @@ const verifyToken = (req, res, next) => {
 		});
 };
 
+// Return user info based on a JWT token
 const getUserInfo = (req, res) => {
 	let token = req.headers["x-access-token"];
 
@@ -75,7 +59,7 @@ const getUserInfo = (req, res) => {
 				});
 			}
 			req.userId = decoded.id;
-			user.findOne({
+			userdb.findOne({
 				where: {
 					id: req.userId
 				}
@@ -84,17 +68,11 @@ const getUserInfo = (req, res) => {
 					return res.status(404).send({ message: "User not found." });
 				}
 	
-				var authorities = [];
-				user.getRoles().then(roles => {
-					for (let i = 0; i < roles.length; i++) {
-						authorities.push("ROLE_" + roles[i].name.toUpperCase());  // what?
-					}
-					res.status(200).send({
-						id: user.id,
-						username: user.username,
-						roles: authorities,
-						accessToken: token
-					});
+				res.status(200).send({
+					id: user.id,
+					username: user.username,
+					isAdmin: user.isAdmin,
+					accessToken: token
 				});
 			})
 			.catch(err => {
@@ -104,18 +82,14 @@ const getUserInfo = (req, res) => {
 }
 
 const signup = (req, res) => {
-	// Save User to Database
-	user.create({
+	userdb.create({
 		username: req.body.username,
-		email: req.body.email,
-		password: bcrypt.hashSync(req.body.password, 8)
+		password: bcrypt.hashSync(req.body.password, 8),
+		last_submit_date: new Date("2000-01-01T00:00:00"),
+		total_points: 0,
+		isAdmin: false,
 	})
-		.then(user => {
-			// default to "user" role
-			user.setRoles([1]).then(() => {
-				res.send({ message: "User was registered successfully!" });
-			});
-		})
+		.then(res.send({ message: "User was registered successfully!" }))
 		.catch(err => {
 			res.status(500).send({ message: err.message });
 		});
@@ -123,7 +97,7 @@ const signup = (req, res) => {
 
 // TODO replace this with passport.js probably
 const signin = (req, res) => {
-	user.findOne({
+	userdb.findOne({
 		where: {
 			username: req.body.username
 		}
@@ -153,18 +127,12 @@ const signin = (req, res) => {
 					expiresIn: 86400, // 24 hours
 				});
 
-			var authorities = [];
-			user.getRoles().then(roles => {
-				for (let i = 0; i < roles.length; i++) {
-					authorities.push("ROLE_" + roles[i].name.toUpperCase());  // what?
-				}
 				res.status(200).send({
 					id: user.id,
 					username: user.username,
-					roles: authorities,
+					isAdmin: user.isAdmin,
 					accessToken: token
 				});
-			});
 		})
 		.catch(err => {
 			res.status(500).send({ message: err.message });

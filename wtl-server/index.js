@@ -5,6 +5,7 @@ const cors = require("cors");
 const port = 3001;
 
 const scores = require('./scores');
+const charts = require('./charts');
 const auth = require('./auth');
 
 const corsOptions = {
@@ -16,24 +17,16 @@ app.use(cors(corsOptions));
 const db = require("./models");
 const role = db.role;
 
-// This can be reworked later to just do `db.sequelize.sync()`
+// DO NOT UNCOMMENT UNLESS YOU WANT TO RESET THE ENTIRE DB (bad in prod)
 /*db.sequelize.sync({ force: true }).then(() => {
 	console.log('Drop and Resync Db');
-	initial();
+	charts.createCharts();
 });*/
-db.sequelize.sync();
 
-function initial() {
-	role.create({
-		id: 1,
-		name: "user"
-	});
 
-	role.create({
-		id: 2,
-		name: "moderator"
-	});
-}
+db.sequelize.sync({ alter: true }).then(() => {
+	//charts.createCharts(); // COMMENT OUT AFTER FIRST RUN
+});
 
 app.use(express.json());
 app.use(function (req, res, next) {
@@ -57,25 +50,9 @@ const userBoard = (req, res) => { // Temp, should probably be moved to auth.js a
 app.get("/api/test/user", [auth.verifyToken], userBoard);
 
 // Scores routes
-app.get('/api/scores/getscores', (req, res) => {
-	scores.getScores()
-		.then(response => {
-			res.status(200).send(response);
-		})
-		.catch(error => {
-			res.status(500).send(error);
-		})
-})
+app.get('/api/scores/getscores', scores.getScores)
 
-app.post('/api/scores/addscores', (req, res) => {
-	scores.addScores(req.body)
-		.then(response => {
-			res.status(200).send(response);
-		})
-		.catch(error => {
-			res.status(500).send(error);
-		})
-})
+app.post('/api/scores/addscores', scores.addScores)
 
 app.listen(port, () => {
 	console.log(`App running on port ${port}.`)

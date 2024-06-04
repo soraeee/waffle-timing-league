@@ -50,7 +50,6 @@ function Login(props: any) {
 						})
 						localStorage.setItem('accessToken', data.accessToken); // i don't know if this is a good idea but who cares
 						navigate("/");
-						console.log(data);
 				});
 	}
 

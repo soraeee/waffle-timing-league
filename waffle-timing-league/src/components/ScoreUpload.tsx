@@ -7,10 +7,9 @@ function ScoreUpload(props: any) {
 
 	const [parsedStats, setParsedStats] = useState<Score[]>([]);
 
-	// TODO: add user (for fkey for postgres db)
 	interface Score {
 		id:					number; // score id?
-		title:				string;	// dunno if artist/subtitle are super necessary rn, that can be handled on db side
+		folderTitle:		string;	// dunno if artist/subtitle are super necessary rn, that can be handled on db side
 
 		w1:					number; // blue fant
 		w2:					number;	// white fant
@@ -23,6 +22,7 @@ function ScoreUpload(props: any) {
 		holdsHit:			number; // includes rolls
 		minesHit:			number;
 		date:				Date; 	// not sure if correct typing?
+		uid:				number;	// user id of the uploader
 	}
 
 	// Read and parse the stats file
@@ -39,7 +39,7 @@ function ScoreUpload(props: any) {
 				scores.map((song: any) => {
 					// Check if song is in the correct pack
 					// TODO: Change this to "Waffle Timing League"
-					if (song["_attributes"]["Dir"].includes("ITL Online 2024")) {
+					if (song["_attributes"]["Dir"].includes("_wtl demo")) {
 						const title: string = song["_attributes"]["Dir"].split("/")[2];
 						//console.log(song["_attributes"]["Dir"]);
 						//console.log(song["Steps"]["HighScoreList"]["HighScore"]);
@@ -49,7 +49,7 @@ function ScoreUpload(props: any) {
 							if (Array.isArray(score)) {
 								tournamentScores.push({
 									id: scoreId,
-									title: title,
+									folderTitle: title,
 
 									w1: score[0]["TapNoteScores"]["W1"]["_text"] - score[0]["Score"]["_text"], // thanks itgmania
 									w2: score[0]["Score"]["_text"],
@@ -62,11 +62,12 @@ function ScoreUpload(props: any) {
 									holdsHit: score[0]["HoldNoteScores"]["Held"]["_text"],
 									minesHit: score[0]["TapNoteScores"]["HitMine"]["_text"],
 									date: score[0]["DateTime"]["_text"],
+									uid: props.loginInfo.id,
 								});
 							} else {
 								tournamentScores.push({
 									id: scoreId,
-									title: title,
+									folderTitle: title,
 
 									w1: score["TapNoteScores"]["W1"]["_text"] - score["Score"]["_text"], // thanks itgmania
 									w2: score["Score"]["_text"],
@@ -79,6 +80,7 @@ function ScoreUpload(props: any) {
 									holdsHit: score["HoldNoteScores"]["Held"]["_text"],
 									minesHit: score["TapNoteScores"]["HitMine"]["_text"],
 									date: score["DateTime"]["_text"],
+									uid: props.loginInfo.id,
 								});
 							}
 						}
@@ -126,31 +128,36 @@ function ScoreUpload(props: any) {
 
 	return (
 		<>
-			<div>
-				<Dropzone onDrop={acceptedFiles => handleChange(acceptedFiles)}>
-					{({ getRootProps, getInputProps }) => (
-						<section>
-							<div className="title-screen-dropzone" {...getRootProps()}>
-								<input {...getInputProps()} />
-								<p className="title-screen-text-info">Import a Stats.xml here!</p>
-							</div>
-						</section>
-					)}
-				</Dropzone>
+			{props.loginInfo.loggedIn
+				? <div>
+					<Dropzone onDrop={acceptedFiles => handleChange(acceptedFiles)}>
+						{({ getRootProps, getInputProps }) => (
+							<section>
+								<div className="title-screen-dropzone" {...getRootProps()}>
+									<input {...getInputProps()} />
+									<p className="title-screen-text-info">Import a Stats.xml here!</p>
+								</div>
+							</section>
+						)}
+					</Dropzone>
 
-				{/*parsedStats.map((score) => {
-					const dpGained: number = (score.w1 * 3.5) + (score.w2 * 3) + (score.w3 * 2) + (score.w4 * 1) + (score.holdsHit * 1) - (score.minesHit * 1);
-					const dpTotal: number = (+score.w1 + +score.w2 + +score.w3 + +score.w4 + +score.w5 + +score.w6 + +score.w7) * 3.5 + +score.holdsHit; // java fucking script
-					const dpPercent = (dpGained / dpTotal * 100).toFixed(2);
-					return (
-						<div key = {score.id}>
-							<p>{score.title}</p>
-							<p>{score.id}</p>
-							<p>{dpPercent}</p>
-						</div>
-					)
-				})*/}
-			</div>
+					{/*parsedStats.map((score) => {
+						const dpGained: number = (score.w1 * 3.5) + (score.w2 * 3) + (score.w3 * 2) + (score.w4 * 1) + (score.holdsHit * 1) - (score.minesHit * 1);
+						const dpTotal: number = (+score.w1 + +score.w2 + +score.w3 + +score.w4 + +score.w5 + +score.w6 + +score.w7) * 3.5 + +score.holdsHit; // java fucking script
+						const dpPercent = (dpGained / dpTotal * 100).toFixed(2);
+						return (
+							<div key = {score.id}>
+								<p>{score.title}</p>
+								<p>{score.id}</p>
+								<p>{dpPercent}</p>
+							</div>
+						)
+					})*/}
+				</div>
+				: <div>
+					<p>You are not logged in!</p>
+				</div>
+			}
 		</>
 	)
 }
