@@ -124,6 +124,11 @@ const charts = sequelize.define("charts", { // TODO this needs a "points" field 
 	chartname: {
 		type: DataTypes.STRING,
 	},
+
+	no_cmod: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: false,
+	}
 });
 
 const scores = sequelize.define("scores", {

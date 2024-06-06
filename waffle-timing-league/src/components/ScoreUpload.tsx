@@ -8,7 +8,6 @@ function ScoreUpload(props: any) {
 	const [parsedStats, setParsedStats] = useState<Score[]>([]);
 
 	interface Score {
-		id:					number; // score id?
 		folderTitle:		string;	// dunno if artist/subtitle are super necessary rn, that can be handled on db side
 
 		w1:					number; // blue fant
@@ -21,6 +20,9 @@ function ScoreUpload(props: any) {
 
 		holdsHit:			number; // includes rolls
 		minesHit:			number;
+
+		cmod:				boolean; // was cmod used?
+
 		date:				Date; 	// not sure if correct typing?
 		uid:				number;	// user id of the uploader
 	}
@@ -31,11 +33,10 @@ function ScoreUpload(props: any) {
             .then((response) => response.text())
             .then((xmlText) => {
                 const dataObj: any = xmlJs.xml2js(xmlText, { compact: true });
-                console.log("Done reading");
+                //console.log("Done reading");
 
 				let tournamentScores: Score[] = [];
 				const scores: any = dataObj["Stats"]["SongScores"]["Song"];
-				let scoreId = 0; // temp, this is stupid
 				scores.map((song: any) => {
 					// Check if song is in the correct pack
 					// TODO: Change this to "Waffle Timing League"
@@ -44,48 +45,57 @@ function ScoreUpload(props: any) {
 						//console.log(song["_attributes"]["Dir"]);
 						//console.log(song["Steps"]["HighScoreList"]["HighScore"]);
 
-						const score = song["Steps"]["HighScoreList"]["HighScore"]
+						const score = song["Steps"]["HighScoreList"]["HighScore"];
 						if (score) {
-							if (Array.isArray(score)) {
-								tournamentScores.push({
-									id: scoreId,
-									folderTitle: title,
+							if (Array.isArray(score)) { // Check if there are multiple scores attributed to one chart
+								score.forEach((sc) => {
+									if (sc["Grade"]["_text"] != "Failed") {
+										tournamentScores.push({
+											folderTitle: title,
 
-									w1: score[0]["TapNoteScores"]["W1"]["_text"] - score[0]["Score"]["_text"], // thanks itgmania
-									w2: score[0]["Score"]["_text"],
-									w3: score[0]["TapNoteScores"]["W2"]["_text"],
-									w4: score[0]["TapNoteScores"]["W3"]["_text"],
-									w5: score[0]["TapNoteScores"]["W4"]["_text"],
-									w6: score[0]["TapNoteScores"]["W5"]["_text"],
-									w7: score[0]["TapNoteScores"]["Miss"]["_text"],
+											w1: sc["TapNoteScores"]["W1"]["_text"] - sc["Score"]["_text"], // thanks itgmania
+											w2: sc["Score"]["_text"],
+											w3: sc["TapNoteScores"]["W2"]["_text"],
+											w4: sc["TapNoteScores"]["W3"]["_text"],
+											w5: sc["TapNoteScores"]["W4"]["_text"],
+											w6: sc["TapNoteScores"]["W5"]["_text"],
+											w7: sc["TapNoteScores"]["Miss"]["_text"],
 
-									holdsHit: score[0]["HoldNoteScores"]["Held"]["_text"],
-									minesHit: score[0]["TapNoteScores"]["HitMine"]["_text"],
-									date: score[0]["DateTime"]["_text"],
-									uid: props.loginInfo.id,
-								});
+											holdsHit: sc["HoldNoteScores"]["Held"]["_text"],
+											minesHit: sc["TapNoteScores"]["HitMine"]["_text"],
+
+											cmod: sc["Modifiers"]["_text"].startsWith('C'),
+
+											date: sc["DateTime"]["_text"],
+											uid: props.loginInfo.id,
+										});
+									}
+								})
 							} else {
-								tournamentScores.push({
-									id: scoreId,
-									folderTitle: title,
+								if (score["Grade"]["_text"] != "Failed") {
+									tournamentScores.push({
+										folderTitle: title,
 
-									w1: score["TapNoteScores"]["W1"]["_text"] - score["Score"]["_text"], // thanks itgmania
-									w2: score["Score"]["_text"],
-									w3: score["TapNoteScores"]["W2"]["_text"],
-									w4: score["TapNoteScores"]["W3"]["_text"],
-									w5: score["TapNoteScores"]["W4"]["_text"],
-									w6: score["TapNoteScores"]["W5"]["_text"],
-									w7: score["TapNoteScores"]["Miss"]["_text"],
+										w1: score["TapNoteScores"]["W1"]["_text"] - score["Score"]["_text"], // thanks itgmania
+										w2: score["Score"]["_text"],
+										w3: score["TapNoteScores"]["W2"]["_text"],
+										w4: score["TapNoteScores"]["W3"]["_text"],
+										w5: score["TapNoteScores"]["W4"]["_text"],
+										w6: score["TapNoteScores"]["W5"]["_text"],
+										w7: score["TapNoteScores"]["Miss"]["_text"],
 
-									holdsHit: score["HoldNoteScores"]["Held"]["_text"],
-									minesHit: score["TapNoteScores"]["HitMine"]["_text"],
-									date: score["DateTime"]["_text"],
-									uid: props.loginInfo.id,
-								});
+										holdsHit: score["HoldNoteScores"]["Held"]["_text"],
+										minesHit: score["TapNoteScores"]["HitMine"]["_text"],
+
+										cmod: score["Modifiers"]["_text"].startsWith('C'),
+
+										date: score["DateTime"]["_text"],
+										uid: props.loginInfo.id,
+									});
+								}
 							}
 						}
 					}
-					scoreId = scoreId += 1 // this is temp and stupid but i might keep it so react doesnt yell at me for children without unique keys
 				})
 
 				fetch('http://localhost:3001/api/scores/addscores', {
@@ -119,7 +129,7 @@ function ScoreUpload(props: any) {
 			reader.onerror = () => console.log('file reading has failed');
 			reader.onload = () => {
 				const dataUrl = reader.result;
-				console.log("help")
+				//console.log("help")
 				readXML(dataUrl);
 			}
 			reader.readAsDataURL(file);
@@ -140,19 +150,6 @@ function ScoreUpload(props: any) {
 							</section>
 						)}
 					</Dropzone>
-
-					{/*parsedStats.map((score) => {
-						const dpGained: number = (score.w1 * 3.5) + (score.w2 * 3) + (score.w3 * 2) + (score.w4 * 1) + (score.holdsHit * 1) - (score.minesHit * 1);
-						const dpTotal: number = (+score.w1 + +score.w2 + +score.w3 + +score.w4 + +score.w5 + +score.w6 + +score.w7) * 3.5 + +score.holdsHit; // java fucking script
-						const dpPercent = (dpGained / dpTotal * 100).toFixed(2);
-						return (
-							<div key = {score.id}>
-								<p>{score.title}</p>
-								<p>{score.id}</p>
-								<p>{dpPercent}</p>
-							</div>
-						)
-					})*/}
 				</div>
 				: <div>
 					<p>You are not logged in!</p>

@@ -14,9 +14,12 @@ const getPublicUserInfo = (req, res) => {
 			from users
 		)
 		WHERE id = :id;`, // oh no
-		{replacements: {id: req.query.id}},
+		{
+			replacements: {id: req.query.id},
+			type: QueryTypes.SELECT
+		},
 	).then(data => {
-		const user = data[0][0];
+		const user = data[0];
 		if (!user) {
 			return res.status(404).send({ message: "User not found." });
 		}

@@ -27,7 +27,7 @@ const createCharts = () => {
 			slot:				chart.difficulties[0].slot,
 			note_count:			chart.difficulties[0].notecount,
 			holds_rolls_count:	chart.difficulties[0].holdsrollscount,
-			mine_count:			chart.difficulties[0].minescount,
+			mines_count:		chart.difficulties[0].minescount,
 			description:		chart.difficulties[0].description,
 			credit:				cr,
 			chartname:			cn,

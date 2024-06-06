@@ -29,7 +29,7 @@ function ProfilePage (props: any) {
 		title:				string;
 		points:				number;
 		accuracy:			number;
-		rank:			number;
+		rank:				number;
 	}
 
 	const [scores, setScores] = useState<Score[]>([]);
@@ -56,7 +56,7 @@ function ProfilePage (props: any) {
 			const parsedScores: Score[] = obj.scores.map((score: any) => {
 				return {
 					id:				score.id,
-					folderTitle:	score.folder_title,
+					folderTitle:	score.title,
 					dpPercent:		score.dp_percent,
 
 					w1:				score.w1,
@@ -73,6 +73,7 @@ function ProfilePage (props: any) {
 					uid:			score.user_id,
 				}
 			});
+			//console.log(obj);
 			setScores(parsedScores);
 		});
 	}
