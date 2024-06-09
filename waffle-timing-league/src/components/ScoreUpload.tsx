@@ -5,7 +5,9 @@ import Dropzone from 'react-dropzone';
 
 function ScoreUpload(props: any) {
 
-	const [parsedStats, setParsedStats] = useState<Score[]>([]);
+	const [processState, setProcessState] = useState<number>(0); // 0 - default, 1 - loading, 2 - recieved updates
+	const [scoreUpdates, setScoreUpdates] = useState<Update[]>([]);
+	const [profileUpdates, setProfileUpdates] = useState<number[]>([0, 0]); // points, acc
 
 	interface Score {
 		folderTitle:		string;	// dunno if artist/subtitle are super necessary rn, that can be handled on db side
@@ -25,6 +27,12 @@ function ScoreUpload(props: any) {
 
 		date:				Date; 	// not sure if correct typing?
 		uid:				number;	// user id of the uploader
+	}
+
+	interface Update {
+		title:				string,
+		scoreDiff:			number,
+		pointsDiff:			number,
 	}
 
 	// Read and parse the stats file
@@ -97,7 +105,8 @@ function ScoreUpload(props: any) {
 						}
 					}
 				})
-
+				
+				setProcessState(1);
 				fetch('http://localhost:3001/api/scores/addscores', {
 					method: 'POST',
 					headers: {
@@ -110,6 +119,10 @@ function ScoreUpload(props: any) {
 					})
 					.then(data => {
 						console.log(data);
+						const obj = JSON.parse(data);
+						setScoreUpdates(obj.updates);
+						setProfileUpdates([obj.pointsDiff, Math.floor(obj.accDiff * 100) / 100]);
+						setProcessState(2);
 				});
 
 				//setParsedStats(tournamentScores);
@@ -134,22 +147,52 @@ function ScoreUpload(props: any) {
 			}
 			reader.readAsDataURL(file);
 		});
-	}, []);
+	}, [props.loginInfo.id]);
 
 	return (
 		<>
 			{props.loginInfo.loggedIn
 				? <div>
-					<Dropzone onDrop={acceptedFiles => handleChange(acceptedFiles)}>
-						{({ getRootProps, getInputProps }) => (
-							<section>
-								<div className="title-screen-dropzone" {...getRootProps()}>
-									<input {...getInputProps()} />
-									<p className="title-screen-text-info">Import a Stats.xml here!</p>
+					{processState === 0 
+						// default
+						? <Dropzone onDrop={acceptedFiles => handleChange(acceptedFiles)}>
+							{({ getRootProps, getInputProps }) => (
+								<div className = "score-dropzone">
+									<div className="score-dropzone-inner" {...getRootProps()}>
+										<input {...getInputProps()} />
+										<p className="score-dropzone-info">Drag and drop your Stats.xml here to submit scores!</p>
+									</div>
 								</div>
-							</section>
-						)}
-					</Dropzone>
+							)}
+						</Dropzone>
+						: <>
+							{processState === 1 
+								// loading
+								? <div>
+									our server monkeys are processing yo'ure score ...
+								</div>
+
+								// updates received
+								: <div> 
+									{scoreUpdates.map((update: Update) => {
+										return (
+											<div>
+												<p>{update.title}</p>
+												<p>+{Math.floor(update.scoreDiff * 100) / 100}%</p>
+												<p>+{update.pointsDiff} pts.</p>
+											</div>
+										)
+									})}
+									<div> {/* TODO style/color these differently*/}
+										{profileUpdates[1] >= 0
+											? <p>Accuracy: +{profileUpdates[1]}%</p>
+											: <p>Accuracy: {profileUpdates[1]}%</p>}
+										<p>Points: +{profileUpdates[0]}</p>
+									</div>
+								</div>
+							}
+						</>
+					}
 				</div>
 				: <div>
 					<p>You are not logged in!</p>

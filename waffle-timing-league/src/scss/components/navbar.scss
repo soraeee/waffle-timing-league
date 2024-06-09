@@ -1,7 +1,29 @@
 @use '../util/mixins' as mixin;
 
 .navbar {
-	@include mixin.flex($dir: row, $gap: 20px);
+	@include mixin.flex($dir: row, $gap: 200px, $x-align: center, $align: center);
 	font-size: 1.1em;
 	margin: 20px;
+	height: 30px;
+
+	&-group {		
+		@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: center);
+	}
+
+	&-usergroup {		
+		@include mixin.flex($dir: row, $gap: 10px, $x-align: center, $align: center);
+	}
+	&-usergroup > img {
+		width: 30px;
+		height: 30px;
+		object-fit: cover;
+		border-radius: 5px;
+	}
+}
+
+#nb-left {
+	width: 700px;
+}
+#nb-right {
+	width: 300px;
 }

@@ -70,6 +70,7 @@ const getUserInfo = (req, res) => {
 				res.status(200).send({
 					id: user.id,
 					username: user.username,
+					pfp: user.pfp,
 					isAdmin: user.isAdmin,
 					accessToken: token
 				});
@@ -129,6 +130,7 @@ const signin = (req, res) => {
 				res.status(200).send({
 					id: user.id,
 					username: user.username,
+					pfp: user.pfp,
 					isAdmin: user.isAdmin,
 					accessToken: token
 				});

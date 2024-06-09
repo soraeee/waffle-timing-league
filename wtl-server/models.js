@@ -61,7 +61,7 @@ const user = sequelize.define("users", {
 });
 
 // Score/chart models
-const charts = sequelize.define("charts", { // TODO this needs a "points" field if that's going to be a thing?
+const charts = sequelize.define("charts", {
 	id: {
 		type: DataTypes.INTEGER,
 		primaryKey: true,
@@ -145,9 +145,14 @@ const scores = sequelize.define("scores", {
 			key: 'folder_title',
 		}
 	},
+
 	dp_percent: {
 		type: DataTypes.DECIMAL,
 	},
+	points: {
+		type: DataTypes.INTEGER,
+	},
+
 	w1: {
 		type: DataTypes.INTEGER,
 	},

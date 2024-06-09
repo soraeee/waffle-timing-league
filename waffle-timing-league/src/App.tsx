@@ -14,6 +14,7 @@ function App() {
 		loggedIn: boolean,
 		user: string,
 		id: number,
+		pfp: string,
 		isAdmin: boolean,
 		accessToken: string
 	}
@@ -23,6 +24,7 @@ function App() {
 		loggedIn: false,
 		user: "",
 		id: -1,
+		pfp: "https://i.imgur.com/scPEALU.png",
 		isAdmin: false,
 		accessToken: ""
 	});
@@ -53,6 +55,7 @@ function App() {
 							loggedIn: true,
 							user: data.username,
 							id: data.id,
+							pfp: data.pfp,
 							isAdmin: data.isAdmin,
 							accessToken: data.accessToken
 						})

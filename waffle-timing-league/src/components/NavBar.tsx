@@ -12,6 +12,7 @@ function NavBar (props: any) {
 			loggedIn: false,
 			user: "",
 			id: -1,
+			pfp: "https://i.imgur.com/scPEALU.png",
 			accessToken: ""
 		});
 		localStorage.setItem('accessToken', "");
@@ -20,19 +21,40 @@ function NavBar (props: any) {
 	}
 
 	return (
-		<div className = "navbar">
-			<NavLink to = '/'><p>wafl timing league logo</p></NavLink>
-			<NavLink to = '/'><p>home</p></NavLink>
-			<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
+		<>
 			{props.loginInfo.loggedIn
-				? <>
-					<NavLink to = '/submit'><p>submit scores</p></NavLink>
-					<NavLink to = {'/profile/' + props.loginInfo.id}><p>profile</p></NavLink>
-					<p onClick={logout}>logout</p>
-				</>
-				: <NavLink to = '/login'><p>login</p></NavLink>
+				? <div className = "navbar">
+					<div className = "navbar-group" id = "nb-left">
+						<NavLink to = '/'><p>wafl timing league logo</p></NavLink>
+						<NavLink to = '/'><p>home</p></NavLink>
+						<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
+						<NavLink to = '/submit'><p>submit scores</p></NavLink>
+						<NavLink to = {'/profile/' + props.loginInfo.id}><p>profile</p></NavLink>
+					</div>
+					<div className = "navbar-group" id = "nb-right">
+						<div className = "navbar-usergroup">
+							<img src = {props.loginInfo.pfp}></img>
+							{/* TODO this should be a dropdown menu later */}
+							<NavLink to = {'/profile/' + props.loginInfo.id}><p>{props.loginInfo.user}</p></NavLink>
+						</div>
+						<p onClick={logout}>logout</p>
+					</div>
+				</div>
+				: 
+				<div className = "navbar">
+					<div className = "navbar-group" id = "nb-left">
+						<NavLink to = '/'><p>wafl timing league logo</p></NavLink>
+						<NavLink to = '/'><p>home</p></NavLink>
+						<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
+						<NavLink to = '/submit'><p>submit scores</p></NavLink>
+						<NavLink to = {'/profile/' + props.loginInfo.id}><p>profile</p></NavLink>
+					</div>
+					<div className = "navbar-group" id = "nb-right">
+						<NavLink to = '/login'><p>login</p></NavLink>
+					</div>
+				</div>
 			}
-		</div>
+		</>
 	)
 }
 

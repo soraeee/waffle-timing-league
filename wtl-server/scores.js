@@ -56,25 +56,31 @@ const getScores = (req, res) => {
 // add score
 // TODO: prob return the actual chart title instead of the folder title
 // TODO: calc ranking points for the score, and also send the amount of RP gain through the response
-// TODO: update cutoff date
 const addScores = async (req, res) => {
 	const uid = req.body[0].uid;
 	let dateCutoff;
 
 	// Previous values for comparison later
 	let oldAcc;
+	let oldPoints;
 
 	let updatedScores = [];
 	let scoresreq = req.body;
 
+	// Precalc log base
+	const base = 1 / Math.log(1.1032889141348);
+
 	try {
 		// Get the user of the score, then get the date when they last submitted scores
 		const user = await userdb.findByPk(uid);
+		console.log(uid);
+		console.log(user);
 		if (user === null) {
 			return res.status(404).send({ message: "Invalid user id when submitting scores (this shouldn't happen lol)" });
 		}
 		dateCutoff = new Date(user.dataValues["last_submit_date"]);
 		oldAcc = user.accuracy;
+		oldPoints = user.total_points;
 
 		// Parse through all scores in the request
 		for (const score of scoresreq) {
@@ -126,15 +132,25 @@ const addScores = async (req, res) => {
 						folder_title: folderTitle 
 					}
 				});
+
+				// Calc EX %
 				const dpGained = (w1 * 3.5) + (w2 * 3) + (w3 * 2) + (w4 * 1) + (holdsHit * 1) - (minesHit * 1);
 				const dpTotal = (+w1 + +w2 + +w3 + +w4 + +w5 + +w6 + +w7) * 3.5 + +curChart.holds_rolls_count;
 				const dpPercent = Math.floor((dpGained / dpTotal * 100) * 100) / 100; // Round down to 2 decimal places
+
+				// Calc points (based on ITL 2023+ curve)
+				// see https://www.desmos.com/calculator/8lntrdswpu
+				const chartPtValue = 1000 // if need be, can change this to be dependent on the chart being played, but for this event every chart is 1k
+				const pts = Math.round(((Math.pow(61, Math.max(0, dpPercent - 50)/50)) + (Math.log(Math.min(dpPercent, 50) + 1) * base) - 1) / 100 * chartPtValue);
+
 				if (prevScore != null) {
 					// Update the already existing score if the new score is better
 					prevScorePercent = prevScore.dp_percent;
+					prevScorePoints = prevScore.points;
 					if (dpPercent > prevScorePercent) {
 						await scoresdb.update({
 							dp_percent: 	dpPercent,
+							points: 		pts,
 							w1:				w1,
 							w2:				w2,
 							w3:				w3,
@@ -153,8 +169,9 @@ const addScores = async (req, res) => {
 							}
 						})
 						updatedScores.push({
-							folderTitle: folderTitle,
+							title: curChart.title,
 							scoreDiff: dpPercent - prevScorePercent,
+							pointsDiff: pts - prevScorePoints,
 						})
 					} else {
 						console.log("Score for " + folderTitle + " is worse or equal to the existing score");
@@ -164,6 +181,7 @@ const addScores = async (req, res) => {
 					await scoresdb.create({
 						folder_title: 	folderTitle,
 						dp_percent: 	dpPercent,
+						points:		 	pts,
 						w1:				w1,
 						w2:				w2,
 						w3:				w3,
@@ -177,17 +195,19 @@ const addScores = async (req, res) => {
 						user_id:		uid,
 					});
 					updatedScores.push({
-						folderTitle: folderTitle,
+						title: curChart.title,
 						scoreDiff: dpPercent,
+						pointsDiff: pts,
 					});
 				};
 				//console.log(updatedScores);
 			}
 		};
 
-		// Calculate new accuracy (should be used to recalc RP too)
+		// Calculate new accuracy and point count
 		let scoreCount = 0;
 		let totalPercent = 0;
+		let newPoints = 0;
 		const allScores = await scoresdb.findAll({
 			where: {
 				user_id: uid
@@ -196,10 +216,12 @@ const addScores = async (req, res) => {
 		allScores.map((score) => {
 			scoreCount += 1;
 			totalPercent += +score.dataValues["dp_percent"];
+			newPoints += +score.dataValues["points"];
 		});
 		const newAcc = Math.floor(totalPercent / scoreCount * 100) / 100;
 		await userdb.update({
 			accuracy: newAcc,
+			total_points: newPoints,
 		},
 		{
 			where: {
@@ -211,6 +233,7 @@ const addScores = async (req, res) => {
 		res.status(200).send({
 			updates: updatedScores,
 			accDiff: newAcc - oldAcc,
+			pointsDiff: newPoints - oldPoints,
 		})
 	} catch (err) {
 		res.status(500).send({ message: err.message });

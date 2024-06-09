@@ -46,6 +46,7 @@ function Login(props: any) {
 							loggedIn: true,
 							user: data.username,
 							id: data.id,
+							pfp: data.pfp,
 							accessToken: data.accessToken
 						})
 						localStorage.setItem('accessToken', data.accessToken); // i don't know if this is a good idea but who cares

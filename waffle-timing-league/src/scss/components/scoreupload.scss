@@ -1,3 +1,20 @@
+@use '../util/mixins' as mixin;
+@use '../util/color' as color;
+
 .img {
 	max-width: 400px;
+}
+
+.score-dropzone {
+	@include mixin.flex($dir: column, $gap: 30px, $x-align: center, $align: center);
+	margin: auto;
+	height: 90vh;
+
+	&-inner {
+		@include mixin.flex($dir: row, $gap: 30px, $x-align: center, $align: center);
+		padding: 100px 100px;
+		border: 2px solid;
+		border-radius: 10px;
+		border-color: color.$dark-lite;
+	}
 }
