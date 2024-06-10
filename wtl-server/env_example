@@ -1,0 +1,6 @@
+# Postgres server credentials
+PG_USER = ''
+PG_PASSWORD = ''
+
+# jsonwebtoken secret string for signing access tokens
+JWT_SECRET = ''
