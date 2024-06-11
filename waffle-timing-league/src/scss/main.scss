@@ -1,9 +1,11 @@
 @use 'util/reset';
+@use 'util/color';
+
 @use 'components/scoreupload';
 @use 'components/navbar';
 @use 'components/profilepage';
 @use 'components/leaderboard';
-@use 'util/color';
+@use 'components/warningmodal';
 
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

@@ -32,6 +32,8 @@ function ProfilePage (props: any) {
 		rank:				number;
 	}
 
+	const [validUser, setValidUser] = useState<boolean>(true);
+
 	const [scores, setScores] = useState<Score[]>([]);
 	const [user, setUser] = useState<User>({
 		id:			-1,
@@ -83,6 +85,7 @@ function ProfilePage (props: any) {
 			method: 'GET',
 		})
 		.then(response => {
+			if (response.status == 404) setValidUser(false); // Don't load the page when an invalid user is requested
 			return response.text();
 		})
 		.then(data => {
@@ -105,50 +108,56 @@ function ProfilePage (props: any) {
 	}, [])
 
 	return (
-		<>
-			{(user.id != -1)
+		<> {validUser
 			? <>
-				<div className = "profile-header">
-					<div className = "profile-header-column-left">
-						<div className = "profile-userinfo">
-							<p className = "profile-username">{user.username}</p>
-							<p className = "profile-title">{user.title}</p>
-							<img src = {user.pfp} className = "profile-pfp"></img>
+				{(user.id != -1)
+				? <>
+					<div className = "profile-header">
+						<div className = "profile-header-column-left">
+							<div className = "profile-userinfo">
+								<p className = "profile-username">{user.username}</p>
+								<p className = "profile-title">{user.title}</p>
+								<img src = {user.pfp} className = "profile-pfp"></img>
+							</div>
+						</div>
+						<div className = "profile-header-column-right">
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">rank</p>
+								<p className = "profile-stats-value">#{user.rank}</p>
+							</div>
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">points</p>
+								<p className = "profile-stats-value">{user.points}</p>
+							</div>
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">accuracy</p>
+								<p className = "profile-stats-value">{user.accuracy}%</p>
+							</div>
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">plays</p>
+								<p className = "profile-stats-value">69420</p>
+							</div>
 						</div>
 					</div>
-					<div className = "profile-header-column-right">
-						<div className = "profile-stats">
-							<p className = "profile-stats-title">rank</p>
-							<p className = "profile-stats-value">#{user.rank}</p>
-						</div>
-						<div className = "profile-stats">
-							<p className = "profile-stats-title">points</p>
-							<p className = "profile-stats-value">{user.points}</p>
-						</div>
-						<div className = "profile-stats">
-							<p className = "profile-stats-title">accuracy</p>
-							<p className = "profile-stats-value">{user.accuracy}%</p>
-						</div>
-						<div className = "profile-stats">
-							<p className = "profile-stats-title">plays</p>
-							<p className = "profile-stats-value">69420</p>
-						</div>
-					</div>
-				</div>
-				<p>scores:</p>
-				{scores.map((score) => {
-					return (
-						<div key = {score.id}>
-							<p>{score.folderTitle}</p>
-							<p>{score.dpPercent}%</p>
-						</div>
-					)
-				})}
+					<p>scores:</p>
+					{scores.map((score) => {
+						return (
+							<div key = {score.id}>
+								<p>{score.folderTitle}</p>
+								<p>{score.dpPercent}%</p>
+							</div>
+						)
+					})}
+				</>
+				
+				: <>
+					<p>Loading... (replace this later lol!)</p>
+				</>}
 			</>
-			
-			: <>
-				<p>Loading... (replace this later lol!)</p>
-			</>}
+			: <div>
+				<p>Invalid user!</p>
+			</div>
+			}
 		</>
 	)
 }

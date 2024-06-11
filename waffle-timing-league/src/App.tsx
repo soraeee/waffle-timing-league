@@ -1,3 +1,5 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import NavBar from './components/NavBar';
 
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -7,6 +9,8 @@ import HomePage from './components/HomePage';
 import ScoreUpload from './components/ScoreUpload';
 import Leaderboard from './components/Leaderboard';
 import Login from './components/Login';
+import Registration from './components/Registration';
+import WarningModal from './components/WarningModal';
 
 function App() {
 
@@ -18,8 +22,15 @@ function App() {
 		isAdmin: boolean,
 		accessToken: string
 	}
+	
+    interface Warning {
+        enabled: boolean,
+        message: string,
+        type: number
+    }
 
 	// Global states I think
+    const [warning, setWarning] = useState<Warning>({enabled: false, message: "", type: 0})
 	const [loginInfo, setLoginInfo] = useState<userInfo>({
 		loggedIn: false,
 		user: "",
@@ -67,10 +78,12 @@ function App() {
 	return (
 		<div className="main">
 			<BrowserRouter>
-				<NavBar loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} />
+				<NavBar loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning} />
+            	{warning.enabled && <WarningModal warning = {warning} setWarning = {setWarning} />}
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/login" element={<Login setLoginInfo = {setLoginInfo} />} />
+					<Route path="/login" element={<Login loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning} />} />
+					<Route path="/register" element={<Registration loginInfo = {loginInfo} />} />
 					<Route path="/leaderboard" element={<Leaderboard />} />
 					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} />} />
 					<Route path="/profile/:id" element={<ProfilePage loginInfo = {loginInfo}/>} />

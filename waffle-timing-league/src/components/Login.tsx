@@ -1,37 +1,27 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler } from "react-hook-form";
 
 function Login(props: any) {
 
 	const navigate = useNavigate();
 
 	interface Credentials {
-		user: string,
-		pass: string
+		username: string,
+		password: string
 	}
-
-	const [creds, setCreds] = useState<Credentials>({
-		user: "",
-		pass: ""
-	});
-
-	const handleChange = (event: any) => {
-		const name = event.target.name;
-		const value = event.target.value;
-		setCreds((values: any) => ({ ...values, [name]: value }))
-	}
-
-	const handleLogin = (event: any) => {
-		event.preventDefault();
-
+	
+	const { register, handleSubmit } = useForm<Credentials>();
+	
+	const onSubmit: SubmitHandler<Credentials> = (data) => {
 		fetch('http://localhost:3001/api/auth/signin', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 					},
 					body: JSON.stringify({
-						username: creds.user,
-						password: creds.pass
+						username: data.username,
+						password: data.password,
 					}),
 					})
 					.then(response => {
@@ -50,30 +40,40 @@ function Login(props: any) {
 							accessToken: data.accessToken
 						})
 						localStorage.setItem('accessToken', data.accessToken); // i don't know if this is a good idea but who cares
+						props.setWarning({enabled: true, message: "You are now logged in as " + data.username + ".", type: 0})
 						navigate("/");
 				});
 	}
 
 	return (
 		<>
-			<p>cool and epic login portal</p>
-			<form onSubmit={handleLogin}>
-				<input
-					name="user"
-					type="text"
-					placeholder="Username"
-					value={creds.user || ""}
-					onChange={handleChange}
-				/>
-				<input
-					name="pass"
-					type="password"
-					placeholder="Password"
-					value={creds.pass || ""}
-					onChange={handleChange}
-				/>
-				<button type="submit">Login</button>
-			</form>
+			{!props.loginInfo.loggedIn 
+			? <>
+				<form onSubmit = {handleSubmit(onSubmit)}>
+					<input 
+						placeholder = "Username"
+						{...register("username",
+							{
+								required: true,
+								maxLength: 32
+							}
+						)}
+					/>
+					<input 
+						placeholder = "Password"
+						type = "password" 
+						{...register("password",
+							{
+								required: true,
+							}
+						)}
+					/>
+					<input type="submit" />
+				</form>
+			</>
+			: <div>
+				<p>You are already logged in!</p>
+			</div>}
 		</>
 	)
 }

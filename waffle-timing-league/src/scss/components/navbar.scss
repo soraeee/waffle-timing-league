@@ -7,11 +7,11 @@
 	height: 30px;
 
 	&-group {		
-		@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: center);
+		@include mixin.flex($dir: row, $gap: 20px, $x-align: center);
 	}
 
 	&-usergroup {		
-		@include mixin.flex($dir: row, $gap: 10px, $x-align: center, $align: center);
+		@include mixin.flex($dir: row, $gap: 10px, $x-align: center);
 	}
 	&-usergroup > img {
 		width: 30px;
@@ -23,7 +23,9 @@
 
 #nb-left {
 	width: 700px;
+	justify-content: flex-start;
 }
 #nb-right {
 	width: 300px;
+	justify-content: flex-end;
 }

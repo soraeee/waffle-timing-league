@@ -81,18 +81,32 @@ const getUserInfo = (req, res) => {
 		});
 }
 
+const validateEmail = (email) => {
+	return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+}
+
 const signup = (req, res) => {
-	userdb.create({
-		username: req.body.username,
-		password: bcrypt.hashSync(req.body.password, 8),
-		last_submit_date: new Date("2000-01-01T00:00:00"),
-		total_points: 0,
-		isAdmin: false,
-	})
-		.then(res.send({ message: "User was registered successfully!" }))
-		.catch(err => {
-			res.status(500).send({ message: err.message });
-		});
+	if ((req.body.username.length <= 32) && validateEmail(req.body.email)) {
+		userdb.create({
+			username: req.body.username,
+			email: req.body.email,
+			password: bcrypt.hashSync(req.body.password, 8),
+			last_submit_date: new Date("2000-01-01T00:00:00"),
+			total_points: 0,
+			isAdmin: false,
+		})
+			.then(res.send({ message: "User was registered successfully!" }))
+			.catch(err => {
+				res.status(500).send({ message: err.message });
+			});
+	} else {
+		res.send({ message: "User validation failed somewhere on server" });
+	}
+
 };
 
 // TODO replace this with passport.js probably

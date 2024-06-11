@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
+import WarningModal from './WarningModal';
 
 // todo show login or logout button depending on current state
 
@@ -17,6 +18,7 @@ function NavBar (props: any) {
 		});
 		localStorage.setItem('accessToken', "");
 		console.log("Logged out");
+		props.setWarning({enabled: true, message: "You have logged out.", type: 0})
 		navigate("/");
 	}
 
@@ -46,10 +48,9 @@ function NavBar (props: any) {
 						<NavLink to = '/'><p>wafl timing league logo</p></NavLink>
 						<NavLink to = '/'><p>home</p></NavLink>
 						<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
-						<NavLink to = '/submit'><p>submit scores</p></NavLink>
-						<NavLink to = {'/profile/' + props.loginInfo.id}><p>profile</p></NavLink>
 					</div>
 					<div className = "navbar-group" id = "nb-right">
+						<NavLink to = '/register'><p>register</p></NavLink>
 						<NavLink to = '/login'><p>login</p></NavLink>
 					</div>
 				</div>
