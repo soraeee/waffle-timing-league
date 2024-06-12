@@ -3,14 +3,14 @@
 
 .warningmodal {
   @include mixin.flex($dir: row, $align: space-around, $x-align: center, $gap: 10px);
-  background-color: color.$dark-lite;
+  background-color: color.$b-dark5;
   top: 10%;
   left: 50%;
   transform: translate(-50%, -90%);
   width: auto;
   height: 50px;
   position: fixed;
-    padding: 12px 12px;
+  padding: 12px 12px;
   z-index: 3;
   box-shadow: 0 0 5px 5px color.$darken;
 

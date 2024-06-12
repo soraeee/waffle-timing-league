@@ -1,10 +1,18 @@
 @use '../util/mixins' as mixin;
+@use '../util/color' as color;
+@use "sass:map";
 
 .profile {
+	background-color: color.$b-dark3;
+	width: 60%;
+	margin: 0 auto;
+	height: 100%;
+
 	&-header {
 		@include mixin.flex($dir: row, $gap: 100px);
-		margin-top: 20px;
-		margin-bottom: 20px;
+		margin: 20px auto;
+		width: 100%;
+		padding: 10px 0px 30px 0px;
 			
 		&-column-left {
 			@include mixin.flex($dir: column, $gap: 20px, $x-align: flex-end, $align: flex-start);
@@ -16,7 +24,7 @@
 
 	&-username {
 		font-size: 3em;
-		font-weight: 600;
+		font-weight: 800;
 	}
 	&-title {
 		font-size: 1em;
@@ -40,7 +48,125 @@
 
 		&-title {
 			font-size: 1.4em;
+			font-weight: 800;
+		}
+	}
+
+	&-scores {
+		@include mixin.flex($dir: column, $gap: 20px, $x-align: center, $align: flex-start);
+
+		&-header {	
+			@include mixin.flex($dir: row, $gap: 30px, $x-align: center, $align: center);
+			width: 100%;
+			padding: 10px 0;
+		}
+
+		&-display {
+			@include mixin.flex($dir: column, $gap: 15px, $x-align: center, $align: flex-start);
+			margin-bottom: 20px;
+			width: 100%;
+		}
+
+		&-title {
+			font-size: 2.5em;
+			font-weight: 800;
+		}
+	}
+}
+
+.search-input {
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	border-radius: 4px;
+	border: 1px solid color.$neutral;
+	background-color: color.$b-dark4;
+	padding: 10px 25px;
+	margin-top: 5px;
+	font-size: 14px;
+}
+
+.search-input:focus {
+	outline: 1px solid color.$lite-dark;
+}
+
+.scorecard {
+	width: 90%;
+	background-color: color.$b-dark2;
+	height: 60px;
+	@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);
+
+	&-inner {
+		width: 100%;
+		@include mixin.flex($dir: row, $gap: 120px, $x-align: center, $align: flex-start);
+	}
+
+	&-rank {
+		width: 60px;
+		height: 60px;
+		background-color: color.$b-dark4;
+		@include mixin.flex($dir: column, $x-align: center, $align: center);
+
+		&-text {
+			width: 60px;
+			font-size: 2.5em;
+			font-weight: 800;
+			font-style: italic;
+			text-align: center;
+		}
+	}
+
+	&-difficulty {
+		width: 40px;
+		height: 40px;
+		background-color: map.get(color.$diffs, "expert");
+		@include mixin.flex($dir: column, $x-align: center, $align: center);
+
+		&-text {
+			text-align: center;
+			width: 60px;
+			color: color.$dark2;
+			font-size: 1.5em;
 			font-weight: 600;
+		}
+	}
+
+	&-titlegroup {
+		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
+		width: 300px;
+	}
+	&-group {
+		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
+		width: 100px;
+	}
+
+	&-title {
+		font-size: 1.5em;
+		font-weight: 600;
+	}
+
+	&-subtitle {
+		font-size: 1em;
+		font-style: italic;
+		font-weight: 200;
+	}
+
+	&-stats {
+		@include mixin.flex($dir: row, $gap: 70px, $x-align: center, $align: flex-start);
+		&-text {	
+			font-size: 1.2em;
+		}
+		#points {
+			font-weight: 600;
+		}
+		#dp {
+			color: color.$accent-y-pastel;
+			font-weight: 600;
+		}
+		#date {
+			font-style: italic;
+			font-weight: 400;
 		}
 	}
 }

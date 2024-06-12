@@ -11,6 +11,7 @@ import Leaderboard from './components/Leaderboard';
 import Login from './components/Login';
 import Registration from './components/Registration';
 import WarningModal from './components/WarningModal';
+import ChartsPage from './components/ChartsPage';
 
 function App() {
 
@@ -85,6 +86,7 @@ function App() {
 					<Route path="/login" element={<Login loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning} />} />
 					<Route path="/register" element={<Registration loginInfo = {loginInfo} />} />
 					<Route path="/leaderboard" element={<Leaderboard />} />
+					<Route path="/charts" element={<ChartsPage />} />
 					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} />} />
 					<Route path="/profile/:id" element={<ProfilePage loginInfo = {loginInfo}/>} />
 				</Routes>

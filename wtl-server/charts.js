@@ -11,11 +11,16 @@ const createCharts = () => {
 		let cn = chart.difficulties[0].chartname;
 		if (cr === null) cr = "";
 		if (cn === null) cn = "";
+
+		// Remove extra metadata in title (typically point/block numbers)
+		const newtitle = chart.title.split("] ");
+		const newtitletl = chart.titletranslit.split("] ");
+
 		chartsdb.create({
 			folder_title: 		chart.folderName,
-			title:				chart.title,
+			title:				newtitle[newtitle.length - 1],
 			subtitle:			chart.subtitle,
-			title_translit:		chart.titletranslit,
+			title_translit:		newtitletl[newtitletl.length - 1],
 			subtitle_translit:	chart.subtitletranslit,
 			artist:				chart.artist,
 			artist_translit:	chart.artisttranslit,
@@ -35,6 +40,19 @@ const createCharts = () => {
 	})
 }
 
+const getCharts = (req, res) => {
+	chartsdb.findAll()
+	.then((data) => {
+		if (data.length == 0) {
+			return res.status(404).send({ message: "No charts found." });
+		}
+		res.status(200).send({
+			charts: data
+		});
+	})
+}
+
 module.exports = {
 	createCharts,
+	getCharts,
 };

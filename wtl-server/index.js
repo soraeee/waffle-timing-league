@@ -16,14 +16,6 @@ const corsOptions = {
 app.use(cors(corsOptions));
 
 const db = require("./models");
-const role = db.role;
-
-// DO NOT UNCOMMENT UNLESS YOU WANT TO RESET THE ENTIRE DB (bad in prod)
-/*db.sequelize.sync({ force: true }).then(() => {
-	console.log('Drop and Resync Db');
-	charts.createCharts();
-});*/
-
 
 db.sequelize.sync({ alter: true }).then(() => {
 	//charts.createCharts(); // COMMENT OUT AFTER FIRST RUN
@@ -55,9 +47,11 @@ app.get("/api/profile/getuserlist", users.getUserList);
 app.get("/api/test/user", [auth.verifyToken], userBoard);*/
 
 // Scores routes
-app.get('/api/scores/getscores', scores.getScores)
+app.get('/api/scores/getscores', scores.getScores);
+app.post('/api/scores/addscores', scores.addScores);
 
-app.post('/api/scores/addscores', scores.addScores)
+// Chart routes
+app.get('/api/charts/getcharts', charts.getCharts);
 
 app.listen(port, () => {
 	console.log(`App running on port ${port}.`)

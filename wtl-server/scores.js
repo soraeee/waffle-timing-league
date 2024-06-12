@@ -27,6 +27,7 @@ const getScores = (req, res) => {
 		scores.id,
 		charts.title,
 		scores.dp_percent,
+		scores.points,
 		scores.user_id,
 		charts.subtitle,
 		charts.title_translit,
@@ -34,7 +35,11 @@ const getScores = (req, res) => {
 		charts.artist,
 		charts.artist_translit,
 		charts.difficulty,
-		charts.slot
+		charts.slot,
+		scores.date,
+		rank () over ( 
+			order by points desc, date asc
+		) ranking
 		from scores as scores
 		inner join charts as charts on
 		scores.folder_title = charts.folder_title
