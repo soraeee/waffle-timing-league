@@ -23,27 +23,36 @@ const sequelize = db.sequelize;
 	})
 }*/
 const getScores = (req, res) => {
-	sequelize.query(`select 
-		scores.id,
-		charts.title,
-		scores.dp_percent,
-		scores.points,
-		scores.user_id,
-		charts.subtitle,
-		charts.title_translit,
-		charts.subtitle_translit,
-		charts.artist,
-		charts.artist_translit,
-		charts.difficulty,
-		charts.slot,
-		scores.date,
-		rank () over ( 
-			order by points desc, date asc
-		) ranking
-		from scores as scores
-		inner join charts as charts on
-		scores.folder_title = charts.folder_title
-		where user_id = :id`,
+	sequelize.query(`
+		select 
+			c.id,
+			s.dp_percent,
+			s.user_id,
+			s.points,
+			c.title,
+			c.title_translit,
+			c.subtitle,
+			c.subtitle_translit,
+			c.artist,
+			c.artist_translit,
+			c.difficulty,
+			c.slot,
+			s.date,
+			(case when s.points is not null
+				then rank () over ( 
+					order by points desc NULLS LAST, date asc 
+				)
+			end) as ranking
+			from charts as c
+			full join (
+				select 
+					folder_title,
+					points,
+					dp_percent,
+					user_id,
+					date
+			from scores where user_id = 3
+			) as s on s.folder_title = c.folder_title;`,
 	{
 		replacements: {id: req.query.id},
 		type: QueryTypes.SELECT

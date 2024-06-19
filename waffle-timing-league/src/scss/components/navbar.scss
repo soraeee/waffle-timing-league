@@ -4,6 +4,7 @@
 .navbar {
 	@include mixin.flex($dir: row, $gap: 150px, $x-align: center, $align: center);
 	font-size: 1.1em;
+	font-weight: 600;
 	margin: 0 auto;
 	width: 100%;
 	height: 60px;

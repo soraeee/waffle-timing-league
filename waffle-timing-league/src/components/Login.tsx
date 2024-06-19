@@ -46,12 +46,14 @@ function Login(props: any) {
 	}
 
 	return (
-		<>
+		<div className = "auth-container">
+			<p className = "auth-title">welcome back</p>
 			{!props.loginInfo.loggedIn 
 			? <>
-				<form onSubmit = {handleSubmit(onSubmit)}>
+				<form onSubmit = {handleSubmit(onSubmit)} className = "auth-container-form">
 					<input 
 						placeholder = "Username"
+						className = "input-box"
 						{...register("username",
 							{
 								required: true,
@@ -61,6 +63,7 @@ function Login(props: any) {
 					/>
 					<input 
 						placeholder = "Password"
+						className = "input-box"
 						type = "password" 
 						{...register("password",
 							{
@@ -68,13 +71,13 @@ function Login(props: any) {
 							}
 						)}
 					/>
-					<input type="submit" />
+					<input type="submit" className = "submit-btn" value = "Login"/>
 				</form>
 			</>
 			: <div>
 				<p>You are already logged in!</p>
 			</div>}
-		</>
+		</div>
 	)
 }
 

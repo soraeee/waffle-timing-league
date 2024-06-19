@@ -1,0 +1,51 @@
+@use '../util/mixins' as mixin;
+@use '../util/color' as color;
+
+.input-box {
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	display: block;
+	box-sizing: border-box;
+	width: 100%;
+	border-radius: 4px;
+	border: 1px solid color.$neutral;
+	background-color: color.$b-dark4;
+	padding: 10px 25px;
+	margin-top: 5px;
+	font-size: 14px;
+}
+
+.input-box:focus {
+	outline: 1px solid color.$lite-dark;
+}
+
+.submit-btn {
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-weight: 600;
+
+	background-color: color.$accent-y-pastel;
+	border-radius: 4px;
+	border: none;
+	color: color.$b-dark5;
+	padding: 12px 32px;
+	text-decoration: none;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+
+.auth-title {
+	font-size: 2em;
+	font-style: italic;
+	font-weight: 800;
+}
+
+.auth-container {
+	@include mixin.flex($dir: column, $gap: 10px, $x-align: center, $align: center);
+	&-form {
+		@include mixin.flex($dir: column, $gap: 10px, $x-align: center, $align: center);
+	}
+	margin: 40px auto;
+	padding: 40px 0;
+	width: 25%;
+	background-color: color.$b-dark3;
+	border-radius: 4px;
+}

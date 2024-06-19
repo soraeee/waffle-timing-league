@@ -181,7 +181,10 @@ function ProfilePage (props: any) {
 								return (
 									<div key = {score.id} className = "scorecard">
 										<div className = "scorecard-rank">
-											<p className = "scorecard-rank-text">{score.rank}</p>
+											{score.rank != null 
+												? <p className = "scorecard-rank-text">{score.rank}</p>
+												: <p className = "scorecard-rank-text">-</p>
+											}
 										</div>
 										<div className = "scorecard-difficulty">
 											<p className = "scorecard-difficulty-text">
@@ -195,13 +198,23 @@ function ProfilePage (props: any) {
 											</div>
 											<div className = "scorecard-stats">
 												<div className = "scorecard-group">
-													<p className = "scorecard-stats-text" id = "dp">{score.dpPercent}%</p>
+													{score.rank != null 
+														? <p className = "scorecard-stats-text" id = "dp">{score.dpPercent}%</p>
+														: <p className = "scorecard-stats-text" id = "dp">-%</p>
+													}
 												</div>
 												<div className = "scorecard-group">
-													<p className = "scorecard-stats-text" id = "points">{score.points} pts.</p>
+													{score.rank != null 
+														? <p className = "scorecard-stats-text" id = "points">{score.points} pts.</p>
+														: <p className = "scorecard-stats-text" id = "points">- pts.</p>
+													}
 												</div>
 												<div className = "scorecard-group">
-													<p className = "scorecard-stats-text" id = "date">{score.date.getMonth()}/{score.date.getDay()}/{score.date.getFullYear()}</p>
+													{score.rank != null 
+														? <p className = "scorecard-stats-text" id = "date">{score.date.getMonth()}/{score.date.getDay()}/{score.date.getFullYear()}</p>
+														: <p className = "scorecard-stats-text" id = "points">-/-/-</p>
+													}
+													
 												</div>
 											</div>
 										</div>

@@ -6,6 +6,7 @@
 @use 'components/profilepage';
 @use 'components/leaderboard';
 @use 'components/warningmodal';
+@use 'components/auth';
 
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

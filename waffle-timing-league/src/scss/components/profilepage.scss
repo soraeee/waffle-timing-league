@@ -62,7 +62,7 @@
 		}
 
 		&-display {
-			@include mixin.flex($dir: column, $gap: 15px, $x-align: center, $align: flex-start);
+			@include mixin.flex($dir: column, $gap: 10px, $x-align: center, $align: flex-start);
 			margin-bottom: 20px;
 			width: 100%;
 		}

@@ -38,10 +38,12 @@ function Registration(props: any) {
 	return (
 		<>
 			{!props.loginInfo.loggedIn 
-			? <>
-				<form onSubmit = {handleSubmit(onSubmit)}>
+			? <div className = "auth-container">
+				<p className = "auth-title">new to WTL?</p>
+				<form onSubmit = {handleSubmit(onSubmit)} className = "auth-container-form">
 					<input 
 						placeholder = "Username"
+						className = "input-box"
 						{...register("username",
 							{
 								required: true,
@@ -51,6 +53,7 @@ function Registration(props: any) {
 					/>
 					<input 
 						placeholder = "Email"
+						className = "input-box"
 						{...register("email",
 							{
 								required: true,
@@ -62,6 +65,7 @@ function Registration(props: any) {
 					<input 
 						placeholder = "Password"
 						type = "password" 
+						className = "input-box"
 						{...register("password",
 							{
 								required: true,
@@ -71,6 +75,7 @@ function Registration(props: any) {
 					<input 
 						type = "password" 
 						placeholder = "Confirm password"
+						className = "input-box"
 						{...register("passwordConfirm",
 							{
 								required: true,
@@ -80,9 +85,9 @@ function Registration(props: any) {
 							}
 						)}
 					/>
-					<input type="submit" />
+					<input type="submit" className = "submit-btn" value = "Register"/>
 				</form>
-			</>
+			</div>
 			: <div>
 				<p>You are already logged in!</p>
 			</div>}
