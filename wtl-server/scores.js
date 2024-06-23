@@ -26,9 +26,6 @@ const getScores = (req, res) => {
 	sequelize.query(`
 		select 
 			c.id,
-			s.dp_percent,
-			s.user_id,
-			s.points,
 			c.title,
 			c.title_translit,
 			c.subtitle,
@@ -36,8 +33,26 @@ const getScores = (req, res) => {
 			c.artist,
 			c.artist_translit,
 			c.difficulty,
+
+			s.dp_percent,
+			s.points,
+			s.w1,
+			s.w2,
+			s.w3,
+			s.w4,
+			s.w5,
+			s.w6,
+			s.w7,
+
+			s.holds_hit,
+			c.holds_rolls_count,
+			s.mines_hit,
+
+			s.lamp,
+
 			c.slot,
 			s.date,
+			s.user_id,
 			(case when s.points is not null
 				then rank () over ( 
 					order by points desc NULLS LAST, date asc 
@@ -46,12 +61,8 @@ const getScores = (req, res) => {
 			from charts as c
 			full join (
 				select 
-					folder_title,
-					points,
-					dp_percent,
-					user_id,
-					date
-			from scores where user_id = 3
+					*
+			from scores where user_id = :id
 			) as s on s.folder_title = c.folder_title;`,
 	{
 		replacements: {id: req.query.id},
@@ -105,7 +116,7 @@ const addScores = async (req, res) => {
 			let checks = true;
 	
 			// Check if the score was set before the last submitted date, and ignore if so
-			// Not sure if this is necessary actually, the function works perfectly as is, and the date cutoff is never actually set
+			// TODO this should be used to check if the score was submitted before WTL start date
 			if (date < dateCutoff) { // i hope this is how date compare works ! also probably technically impossible for date to equal the cutoff anyways
 				console.log("Date for score for " + folderTitle + " is set before the date cutoff" );
 				checks = false;
@@ -157,7 +168,34 @@ const addScores = async (req, res) => {
 				const chartPtValue = 1000 // if need be, can change this to be dependent on the chart being played, but for this event every chart is 1k
 				const pts = Math.round(((Math.pow(61, Math.max(0, dpPercent - 50)/50)) + (Math.log(Math.min(dpPercent, 50) + 1) * base) - 1) / 100 * chartPtValue);
 
+				// Calc score lamp
+				let lampType = 1; // Default for a clear
+
+				let noDropsOrMines = false // Check for no hold/roll drops or mines hit - dropping a hold/roll or hitting a mine makes the score ineligible for Quad
+				if ((holdsHit == curChart.holds_rolls_count) && (minesHit == 0)) noDropsOrMines = true;
+		
+				if ((w7 == 0) && (w6 == 0) && (w5 == 0)) 			lampType += 1;			// FC (all Great and higher)
+				if ((lampType == 2) && (w4 == 0)) 					lampType += 1;			// FEC (all Excellent and higher)
+				if ((lampType == 3) && (w3 == 0) && noDropsOrMines) lampType += 1;			// Quad (all Fantastic and higher, no holds/rolls dropped or mines hit)
+				if (score.dpPercent == 100 && noDropsOrMines)		lampType = 5;			// Quint (100% DP/all blue Fantastics, no holds/rolls dropped or mines hit)
+
 				if (prevScore != null) {
+					let scoreUpdate = false;
+					
+					// Better lamp type supercedes the lamp type gotten with the best score
+					if (lampType > prevScore.lamp) {
+						await scoresdb.update({
+							lamp: 	lampType,
+						},
+						{
+							where: {					
+								user_id: uid,
+								folder_title: folderTitle
+							}
+						})
+						scoreUpdate = true;
+					}
+
 					// Update the already existing score if the new score is better
 					prevScorePercent = prevScore.dp_percent;
 					prevScorePoints = prevScore.points;
@@ -182,13 +220,20 @@ const addScores = async (req, res) => {
 								folder_title: folderTitle
 							}
 						})
-						updatedScores.push({
-							title: curChart.title,
-							scoreDiff: dpPercent - prevScorePercent,
-							pointsDiff: pts - prevScorePoints,
-						})
+						scoreUpdate = true;
 					} else {
 						console.log("Score for " + folderTitle + " is worse or equal to the existing score");
+					}
+
+					// Send score update information if score was updated
+					if (scoreUpdate) {
+						updatedScores.push({
+							title: 		curChart.title,
+							scoreDiff: 	dpPercent - prevScorePercent,
+							pointsDiff: pts - prevScorePoints,
+							oldLamp:	prevScore.lamp,
+							newLamp:	lampType,
+						})
 					}
 				} else {
 					// Create a new score
@@ -205,13 +250,16 @@ const addScores = async (req, res) => {
 						w7:				w7,
 						holds_hit:		holdsHit,
 						mines_hit:		minesHit,
+						lamp:			lampType,
 						date:			date,
 						user_id:		uid,
 					});
 					updatedScores.push({
-						title: curChart.title,
-						scoreDiff: dpPercent,
+						title: 		curChart.title,
+						scoreDiff: 	dpPercent,
 						pointsDiff: pts,
+						oldLamp:	0,
+						newLamp:	lampType,
 					});
 				};
 				//console.log(updatedScores);

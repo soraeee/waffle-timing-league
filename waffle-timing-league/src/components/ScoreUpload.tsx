@@ -150,7 +150,11 @@ function ScoreUpload(props: any) {
 	}, [props.loginInfo.id]);
 
 	return (
-		<>
+		<div className = "submit-container">
+			<div className = "submit-container-inner">
+				<p className = "submit-container-title">Upload Scores</p>
+				<p className = "submit-container-info">Your Stats.xml can be found at [ITGM install location]\Save\LocalProfiles\[profile number]</p>
+			</div>
 			{props.loginInfo.loggedIn
 				? <div>
 					{processState === 0 
@@ -198,7 +202,7 @@ function ScoreUpload(props: any) {
 					<p>You are not logged in!</p>
 				</div>
 			}
-		</>
+		</div>
 	)
 }
 

@@ -184,6 +184,11 @@ const scores = sequelize.define("scores", {
 		type: DataTypes.INTEGER,
 	},
 
+	lamp: {
+		type: DataTypes.INTEGER,
+		defaultValue: 0,
+	},
+
 	date: {
 		type: DataTypes.DATE,
 		allowNull: false,

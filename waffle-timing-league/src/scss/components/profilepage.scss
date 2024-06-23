@@ -94,7 +94,7 @@
 .scorecard {
 	width: 90%;
 	background-color: color.$b-dark2;
-	height: 60px;
+	height: 45px;
 	@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);
 
 	&-inner {
@@ -103,14 +103,14 @@
 	}
 
 	&-rank {
-		width: 60px;
-		height: 60px;
+		width: 70px;
+		height: 45px;
 		background-color: color.$b-dark4;
 		@include mixin.flex($dir: column, $x-align: center, $align: center);
 
 		&-text {
-			width: 60px;
-			font-size: 2.5em;
+			width: 70px;
+			font-size: 2em;
 			font-weight: 800;
 			font-style: italic;
 			text-align: center;
@@ -132,9 +132,14 @@
 		}
 	}
 
+	&-lamp {
+		width: 15px;
+		height: 45px;
+	}
+
 	&-titlegroup {
 		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
-		width: 300px;
+		width: 250px;
 	}
 	&-group {
 		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
@@ -147,7 +152,7 @@
 	}
 
 	&-subtitle {
-		font-size: 1em;
+		font-size: 0.9em;
 		font-style: italic;
 		font-weight: 200;
 	}
@@ -170,3 +175,4 @@
 		}
 	}
 }
+

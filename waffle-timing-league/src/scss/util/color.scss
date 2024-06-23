@@ -38,3 +38,19 @@ $diffs: (
     "expert":   #54b4ff,
     "edit":     #aaaaaa,
 );
+
+// lamp colors
+$lamps: (
+    "quint":    #e270a0,
+    "quad":     #5eafd4,
+    "fec":      #e6bb6a,
+    "fc":       #8ce072,
+    "clear":    #f0f4f7,
+    "noplay":   #4b4b4b,
+);
+
+@each $lamp in map.keys($lamps) {
+    .lamp-#{$lamp} {
+      background-color: map.get($lamps, $lamp);
+    }
+}

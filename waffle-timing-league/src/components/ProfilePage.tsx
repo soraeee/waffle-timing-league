@@ -2,6 +2,8 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from "react-hook-form";
 
+import ScoreCard from './ScoreCard';
+
 function ProfilePage (props: any) {
 
 	interface Score {
@@ -25,7 +27,10 @@ function ProfilePage (props: any) {
 		w6:					number;	// way off
 		w7:					number;	// miss
 
+		lamp:				number; // clear lamp
+
 		holdsHit:			number; // includes rolls
+		holdsTotal:			number; // includes rolls
 		minesHit:			number;
 
 		date:				Date; 	// not sure if correct typing?
@@ -94,7 +99,10 @@ function ProfilePage (props: any) {
 					w6:					score.w6,
 					w7:					score.w7,
 
+					lamp:				score.lamp,
+
 					holdsHit:			score.holds_hit,
+					holdsTotal:			score.holds_rolls_count,
 					minesHit:			score.mines_hit,
 					date:				new Date(score.date),
 					uid:				score.user_id,
@@ -179,46 +187,7 @@ function ProfilePage (props: any) {
 						<div className = "profile-scores-display">
 							{scores.map((score) => {
 								return (
-									<div key = {score.id} className = "scorecard">
-										<div className = "scorecard-rank">
-											{score.rank != null 
-												? <p className = "scorecard-rank-text">{score.rank}</p>
-												: <p className = "scorecard-rank-text">-</p>
-											}
-										</div>
-										<div className = "scorecard-difficulty">
-											<p className = "scorecard-difficulty-text">
-												{score.difficulty}
-											</p>
-										</div>
-										<div className = "scorecard-inner">
-											<div className = "scorecard-titlegroup">
-												<p className = "scorecard-title">{score.title}</p>
-												<p className = "scorecard-subtitle">{score.subtitle}</p>
-											</div>
-											<div className = "scorecard-stats">
-												<div className = "scorecard-group">
-													{score.rank != null 
-														? <p className = "scorecard-stats-text" id = "dp">{score.dpPercent}%</p>
-														: <p className = "scorecard-stats-text" id = "dp">-%</p>
-													}
-												</div>
-												<div className = "scorecard-group">
-													{score.rank != null 
-														? <p className = "scorecard-stats-text" id = "points">{score.points} pts.</p>
-														: <p className = "scorecard-stats-text" id = "points">- pts.</p>
-													}
-												</div>
-												<div className = "scorecard-group">
-													{score.rank != null 
-														? <p className = "scorecard-stats-text" id = "date">{score.date.getMonth()}/{score.date.getDay()}/{score.date.getFullYear()}</p>
-														: <p className = "scorecard-stats-text" id = "points">-/-/-</p>
-													}
-													
-												</div>
-											</div>
-										</div>
-									</div>
+									<ScoreCard score = {score} />
 								)
 							})}
 						</div>

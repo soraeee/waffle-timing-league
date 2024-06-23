@@ -8,7 +8,6 @@
 .score-dropzone {
 	@include mixin.flex($dir: column, $gap: 30px, $x-align: center, $align: center);
 	margin: auto;
-	height: 90vh;
 
 	&-inner {
 		@include mixin.flex($dir: row, $gap: 30px, $x-align: center, $align: center);
@@ -16,5 +15,25 @@
 		border: 2px solid;
 		border-radius: 10px;
 		border-color: color.$dark-lite;
+	}
+}
+
+.submit-container {
+	@include mixin.flex($dir: column, $gap: 100px, $x-align: center, $align: center);
+
+	&-inner {
+		@include mixin.flex($dir: column, $gap: 20px, $x-align: center, $align: center);
+	}
+
+	&-title {
+		margin-top: 20px;
+		font-size: 3.5em;
+		font-weight: 800;
+	}
+
+	&-info {
+		font-style: italic;
+		font-size: 1em;
+		font-weight: 400;
 	}
 }
