@@ -56,6 +56,8 @@ function ProfilePage (props: any) {
 
 	const [validUser, setValidUser] = useState<boolean>(true);
 
+	const [activeCard, setActiveCard] = useState<number>(-1);
+
 	const [scores, setScores] = useState<Score[]>([]);
 	const [user, setUser] = useState<User>({
 		id:			-1,
@@ -172,22 +174,51 @@ function ProfilePage (props: any) {
 								<p className = "profile-stats-value">69420</p>
 							</div>
 						</div>
+						{/*<div className = "profile-header-column-right">
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">Quints</p>
+								<p className = "profile-stats-value">123123</p>
+							</div>
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">Quads</p>
+								<p className = "profile-stats-value">123123</p>
+							</div>
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">FECs</p>
+								<p className = "profile-stats-value">123123</p>
+							</div>
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">FCs</p>
+								<p className = "profile-stats-value">123123</p>
+							</div>
+							<div className = "profile-stats">
+								<p className = "profile-stats-title">Clears</p>
+								<p className = "profile-stats-value">123123</p>
+							</div>
+						</div>*/}
 					</div>
 					<div className = "profile-scores">
 						<div className = "profile-scores-header">
 							<p className = "profile-scores-title">top plays</p>
-							<form>
+							<form className = "profile-scores-search">
 								<input
 									className = "search-input"
 									placeholder = "Search songs..."
 									{...register("search")}
 								/>
+								<input type = "submit" />
 							</form>
 						</div>
 						<div className = "profile-scores-display">
-							{scores.map((score) => {
+							{scores.map((score, index) => {
 								return (
-									<ScoreCard score = {score} />
+									<ScoreCard 
+										key = {index} 
+										score = {score}
+										index = {index}
+										activeCard = {activeCard} 
+										setActiveCard = {setActiveCard} 
+									/>
 								)
 							})}
 						</div>

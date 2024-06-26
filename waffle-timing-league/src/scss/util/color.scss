@@ -49,8 +49,25 @@ $lamps: (
     "noplay":   #4b4b4b,
 );
 
+// judgment colors
+$juds: (
+    "fa":   #5eafd4,
+    "wfa":  #f0f4f7,
+    "ex":   #e6bb6a,
+    "gr":   #8ce072,
+    "de":   #a97bdd,
+    "wo":   #ce8665,
+    "mi":   #e66a6a,
+);
+
 @each $lamp in map.keys($lamps) {
     .lamp-#{$lamp} {
       background-color: map.get($lamps, $lamp);
+    }
+}
+
+@each $jud in map.keys($juds) {
+    .jud-#{$jud} {
+      color: map.get($juds, $jud);
     }
 }
