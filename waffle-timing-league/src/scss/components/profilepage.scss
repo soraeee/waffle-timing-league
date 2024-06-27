@@ -87,7 +87,6 @@
 	border: 1px solid color.$neutral;
 	background-color: color.$b-dark4;
 	padding: 10px 25px;
-	margin-top: 5px;
 	font-size: 14px;
 }
 
@@ -95,10 +94,25 @@
 	outline: 1px solid color.$lite-dark;
 }
 
+.search-btn {
+	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+	font-weight: 600;
+
+	background-color: color.$accent-b-pastel;
+	border-radius: 4px;
+	border: none;
+	color: color.$b-dark5;
+	padding: 10px 24px;
+	text-decoration: none;
+	margin: 4px 2px;
+	cursor: pointer;
+}
+
 .scorecard {
 	width: 90%;
 	background-color: color.$b-dark2;
 	height: 45px;
+	z-index: 2;
 	@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);
 	
 	transition: box-shadow 0.20s;

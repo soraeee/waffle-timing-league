@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { Search, useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import ScoreCard from './ScoreCard';
@@ -59,6 +59,7 @@ function ProfilePage (props: any) {
 	const [activeCard, setActiveCard] = useState<number>(-1);
 
 	const [scores, setScores] = useState<Score[]>([]);
+	const [displayedScores, setDisplayedScores] = useState<Score[]>([]);
 	const [user, setUser] = useState<User>({
 		id:			-1,
 		username:	'lol',
@@ -113,6 +114,7 @@ function ProfilePage (props: any) {
 			});
 			console.log(obj);
 			setScores(parsedScores);
+			setDisplayedScores(parsedScores);
 		});
 	}
 
@@ -136,6 +138,17 @@ function ProfilePage (props: any) {
 				rank:		obj.rank,
 			})
 		});
+	}
+
+	const onSubmit: SubmitHandler<SearchInput> = (data) => {
+		const input: string = data.search.toLowerCase();
+		const newScores: Score[] = scores.filter((score: Score) => {
+			return (score.title.toLowerCase().includes(input)
+					|| score.titleTranslit.toLowerCase().includes(input)
+					|| score.subtitle.toLowerCase().includes(input)
+					|| score.subtitleTranslit.toLowerCase().includes(input))
+		});
+		setDisplayedScores(newScores);
 	}
 
 	useEffect(() => {
@@ -200,17 +213,17 @@ function ProfilePage (props: any) {
 					<div className = "profile-scores">
 						<div className = "profile-scores-header">
 							<p className = "profile-scores-title">top plays</p>
-							<form className = "profile-scores-search">
+							<form className = "profile-scores-search" onSubmit = {handleSubmit(onSubmit)}>
 								<input
 									className = "search-input"
 									placeholder = "Search songs..."
 									{...register("search")}
 								/>
-								<input type = "submit" />
+								<input className = "search-btn" type = "submit" value = "Search"/>
 							</form>
 						</div>
 						<div className = "profile-scores-display">
-							{scores.map((score, index) => {
+							{displayedScores.map((score, index) => {
 								return (
 									<ScoreCard 
 										key = {index} 
@@ -221,6 +234,10 @@ function ProfilePage (props: any) {
 									/>
 								)
 							})}
+							{displayedScores.length == 0
+								? <p>No scores found :pensive:</p>
+								: null
+							}
 						</div>
 					</div>
 				</div>
