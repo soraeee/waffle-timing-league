@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
-import { Search, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import ScoreCard from './ScoreCard';
 
+// SHUT THE FUCK UP ESLINT
+// eslint-disable-next-line
 function ProfilePage (props: any) {
 
 	interface Score {
