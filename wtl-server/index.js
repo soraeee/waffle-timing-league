@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const app = express();
 const cors = require("cors");
@@ -9,7 +10,7 @@ const auth = require('./auth');
 const users = require('./users');
 
 const corsOptions = {
-	origin: "http://localhost:5173"
+	origin: process.env.WAFFLE_HOSTNAME,
 };
 
 app.use(cors(corsOptions));
@@ -22,7 +23,7 @@ db.sequelize.sync({ alter: true }).then(() => {
 
 app.use(express.json());
 app.use(function (req, res, next) {
-	res.setHeader('Access-Control-Allow-Origin', 'http://localhost:5173');
+	res.setHeader('Access-Control-Allow-Origin', process.env.WAFFLE_HOSTNAME);
 	res.setHeader('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
 	res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Access-Control-Allow-Headers');
 	next();
@@ -51,6 +52,9 @@ app.post('/api/scores/addscores', scores.addScores);
 
 // Chart routes
 app.get('/api/charts/getcharts', charts.getCharts);
+
+// Default
+app.get("/", (req, res) => res.send("cool server"));
 
 app.listen(port, () => {
 	console.log(`App running on port ${port}.`)

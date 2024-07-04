@@ -11,7 +11,7 @@
 	&-list {
 		@include mixin.flex($dir: column, $gap: 10px, $x-align: flex-start, $align: flex-start);
 		&-row {
-			@include mixin.flex($dir: row, $gap: 300px, $x-align: center, $align: space-evenly);
+			@include mixin.flex($dir: row, $gap: 200px, $x-align: center, $align: space-evenly);
 			
 			&-user {
 				@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);

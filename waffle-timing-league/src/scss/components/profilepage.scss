@@ -63,6 +63,7 @@
 
 		&-display {
 			@include mixin.flex($dir: column, $gap: 10px, $x-align: center, $align: flex-start);
+
 			margin-bottom: 20px;
 			width: 100%;
 		}
@@ -113,7 +114,13 @@
 	background-color: color.$b-dark2;
 	height: 45px;
 	z-index: 2;
-	@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);
+	//@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);
+	
+		
+	display: grid;
+	grid-template-columns: 70px 15px 40px 40% 12% auto auto;
+	align-items: center;
+	column-gap: 20px;
 	
 	transition: box-shadow 0.20s;
 
@@ -128,18 +135,18 @@
 	}
 
 	&-inner {
-		width: 100%;
+		//width: 100%;
 		@include mixin.flex($dir: row, $gap: 120px, $x-align: center, $align: flex-start);
 	}
 
 	&-rank {
-		width: 70px;
+		//width: 70px;
 		height: 45px;
 		background-color: color.$b-dark4;
 		@include mixin.flex($dir: column, $x-align: center, $align: center);
 
 		&-text {
-			width: 70px;
+			//width: 70px;
 			font-size: 2em;
 			font-weight: 800;
 			font-style: italic;
@@ -148,7 +155,7 @@
 	}
 
 	&-difficulty {
-		width: 40px;
+		//width: 40px;
 		height: 40px;
 		background-color: map.get(color.$diffs, "expert");
 		@include mixin.flex($dir: column, $x-align: center, $align: center);
@@ -163,17 +170,35 @@
 	}
 
 	&-lamp {
-		width: 15px;
+		min-width: 15px;
 		height: 45px;
 	}
 
 	&-titlegroup {
 		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
-		width: 250px;
 	}
 	&-group {
 		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
-		width: 100px;
+		#points {
+			font-weight: 600;
+			font-size: 1.2em;
+		}
+		#dp {
+			color: color.$accent-y-pastel;
+			font-weight: 600;
+			font-size: 1.2em;
+		}
+		#date {
+			font-style: italic;
+			font-weight: 400;
+			font-size: 1.2em;
+			@media (max-width: 1599.9px) {
+				display: none;
+			}
+			@media (min-width: 1600px) {
+				display: block;
+			}
+		}
 	}
 
 	&-title {
@@ -189,20 +214,6 @@
 
 	&-stats {
 		@include mixin.flex($dir: row, $gap: 70px, $x-align: center, $align: flex-start);
-		&-text {	
-			font-size: 1.2em;
-		}
-		#points {
-			font-weight: 600;
-		}
-		#dp {
-			color: color.$accent-y-pastel;
-			font-weight: 600;
-		}
-		#date {
-			font-style: italic;
-			font-weight: 400;
-		}
 	}
 
 	&-details {

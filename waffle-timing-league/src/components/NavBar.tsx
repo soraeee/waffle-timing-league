@@ -24,7 +24,7 @@ function NavBar (props: any) {
 			{props.loginInfo.loggedIn
 				? <div className = "navbar">
 					<div className = "navbar-group" id = "nb-left">
-						<NavLink to = '/'><p>wafl timing league logo</p></NavLink>
+						<NavLink to = '/'><p>waffle timing league (ALPHA)</p></NavLink>
 						<NavLink to = '/'><p>home</p></NavLink>
 						<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
 						<NavLink to = '/charts'><p>charts</p></NavLink>
@@ -43,7 +43,7 @@ function NavBar (props: any) {
 				: 
 				<div className = "navbar">
 					<div className = "navbar-group" id = "nb-left">
-						<NavLink to = '/'><p>wafl timing league logo</p></NavLink>
+						<NavLink to = '/'><p>waffle timing league (ALPHA)</p></NavLink>
 						<NavLink to = '/'><p>home</p></NavLink>
 						<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
 						<NavLink to = '/charts'><p>charts</p></NavLink>

@@ -73,31 +73,30 @@ function ScoreCard({score, index, activeCard, setActiveCard}: IProps) {
 						{score.difficulty}
 					</p>
 				</div>
-				<div className="scorecard-inner">
-					<div className="scorecard-titlegroup">
-						<p className="scorecard-title">{score.title}</p>
-						<p className="scorecard-subtitle">{score.subtitle}</p>
-					</div>
-					<div className="scorecard-stats">
-						<div className="scorecard-group">
-							{score.rank != null
-								? <p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
-								: <p className="scorecard-stats-text" id="dp">-%</p>
-							}
-						</div>
-						<div className="scorecard-group">
-							{score.rank != null
-								? <p className="scorecard-stats-text" id="points">{score.points} pts.</p>
-								: <p className="scorecard-stats-text" id="points">- pts.</p>
-							}
-						</div>
-						<div className="scorecard-group">
-							{score.rank != null
-								? <p className="scorecard-stats-text" id="date">{score.date.getMonth()}/{score.date.getDay()}/{score.date.getFullYear()}</p>
-								: <p className="scorecard-stats-text" id="points">-/-/-</p>
-							}
-						</div>
-					</div>
+				<div className="scorecard-titlegroup">
+					<p className="scorecard-title">{score.title}</p>
+					<p className="scorecard-subtitle">{score.subtitle}</p>
+				</div>
+				
+				<div className="scorecard-group">
+					{score.rank != null
+						? <p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
+						: <p className="scorecard-stats-text" id="dp">-%</p>
+					}
+				</div>
+				
+				<div className="scorecard-group">
+					{score.rank != null
+						? <p className="scorecard-stats-text" id="points">{score.points} pts.</p>
+						: <p className="scorecard-stats-text" id="points">- pts.</p>
+					}
+				</div>
+				
+				<div className="scorecard-group">
+					{score.rank != null
+						? <p className="scorecard-stats-text" id="date">{score.date.getMonth()}/{score.date.getDay()}/{score.date.getFullYear()}</p>
+						: <p className="scorecard-stats-text" id="date">-/-/-</p>
+					}
 				</div>
 			</div>
 			

@@ -1,0 +1,33 @@
+@use '../util/mixins' as mixin;
+@use '../util/color' as color;
+
+.home {
+	width: 60%;
+	margin: 20px auto;
+	height: 100%;
+	@include mixin.flex($dir: column, $gap: 30px, $x-align: center, $align: center);
+	
+	&-title {
+		font-weight: 800;
+		font-size: 2em;
+	}
+
+	&-paragraph {
+		@include mixin.flex($dir: column, $gap: 5px, $x-align: center, $align: center);
+	}
+
+	&-text {
+		font-size: 1.1em;
+		text-align: center;
+	}
+
+	&-bold {
+		font-weight: 800;
+		font-style: oblique;
+	}
+
+	&-important {
+		font-weight: 600;
+		font-size: 1.3em;
+	}
+}

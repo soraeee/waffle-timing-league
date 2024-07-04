@@ -9,6 +9,7 @@ function Leaderboard () {
 		username:			string;
 		pfp:				string;
 		points:				number;
+		accuracy:				number;
 	}
 
 	const [leaderboard, setLeaderboard] = useState<User[]>([]);
@@ -31,6 +32,7 @@ function Leaderboard () {
 					username:	user.username,
 					pfp:		user.pfp,
 					points:		user.total_points,
+					accuracy:	user.accuracy,
 				}
 			});
 			setLeaderboard(parsedUsers);
@@ -56,6 +58,7 @@ function Leaderboard () {
 							</div>
 							<div className = "leaderboard-list-row-stats">
 								<p>{user.points} pts.</p>
+								<p>{user.accuracy}%</p>
 							</div>
 						</div>
 					)

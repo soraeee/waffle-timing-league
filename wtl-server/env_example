@@ -4,3 +4,6 @@ PG_PASSWORD = ''
 
 # jsonwebtoken secret string for signing access tokens
 JWT_SECRET = ''
+
+# hostname - mainly for dev vs prod, default to localhost for dev
+WAFFLE_HOSTNAME = 'http://localhost:5173'

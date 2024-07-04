@@ -184,7 +184,7 @@ function ProfilePage (props: any) {
 							</div>
 							<div className = "profile-stats">
 								<p className = "profile-stats-title">plays</p>
-								<p className = "profile-stats-value">69420</p>
+								<p className = "profile-stats-value">[TBD]</p>
 							</div>
 						</div>
 						{/*<div className = "profile-header-column-right">

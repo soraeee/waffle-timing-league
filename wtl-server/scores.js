@@ -103,7 +103,7 @@ const addScores = async (req, res) => {
 		if (user === null) {
 			return res.status(404).send({ message: "Invalid user id when submitting scores (this shouldn't happen lol)" });
 		}
-		dateCutoff = new Date(user.dataValues["last_submit_date"]);
+		dateCutoff = new Date(1720087982); // July 4 2AM because I'm stupid
 		oldAcc = user.accuracy;
 		oldPoints = user.total_points;
 
