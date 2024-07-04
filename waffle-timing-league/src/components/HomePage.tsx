@@ -6,7 +6,7 @@ function HomePage () {
 			<div className = "home-paragraph">
 				<p className = "home-text">many features have yet to be developed, or are planned to undergo change at some point.</p>
 				<p className = "home-text">as such, everything you currently see is <span className = "home-bold">subject to change!</span></p>
-				<p className = "home-text"><span className = "home-bold">this especially includes the pack!</span></p>
+				<p className = "home-text"><span className = "home-bold">this especially includes the pack!</span> as a consequence, scores will <span className = "home-bold">not</span> carry over to the official release.</p>
 			</div>
 			<div className = "home-paragraph">
 				<p className = "home-text">the purpose of this alpha is to test the infrastructure, and to make sure core event functions work properly.</p>
@@ -28,7 +28,7 @@ function HomePage () {
 				<p className = "home-text">the final pack will be around 100-150 charts, with no unlocks.</p>
 			</div>
 			<div className = "home-paragraph">
-				<p className = "home-text"><span className = "home-bold home-important">roadmap of things to add later:</span></p>
+				<p className = "home-text"><span className = "home-bold home-important">roadmap of things to add later</span></p>
 				<p className = "home-text">actual home page</p>
 				<p className = "home-text">more feedback popups</p>
 				<p className = "home-text">manual score submission/score deletion</p>

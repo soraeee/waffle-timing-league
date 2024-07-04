@@ -5,15 +5,16 @@
 	width: 60%;
 	margin: 20px auto;
 	height: 100%;
-	@include mixin.flex($dir: column, $gap: 30px, $x-align: center, $align: center);
+	@include mixin.flex($dir: column, $gap: 30px, $x-align: start, $align: center);
 	
 	&-title {
 		font-weight: 800;
 		font-size: 2em;
+		margin: 0 auto;
 	}
 
 	&-paragraph {
-		@include mixin.flex($dir: column, $gap: 5px, $x-align: center, $align: center);
+		@include mixin.flex($dir: column, $gap: 5px, $x-align: start, $align: center);
 	}
 
 	&-text {
