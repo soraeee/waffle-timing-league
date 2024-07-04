@@ -14,7 +14,7 @@ function Login(props: any) {
 	const { register, handleSubmit } = useForm<Credentials>();
 	
 	const onSubmit: SubmitHandler<Credentials> = (data) => {
-		fetch('http://localhost:3001/api/auth/signin', {
+		fetch(import.meta.env.VITE_API_URL + '/api/auth/signin', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',

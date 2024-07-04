@@ -14,7 +14,7 @@ function Registration(props: any) {
 
 	const { register, handleSubmit, getValues } = useForm<formInput>();
 	const onSubmit: SubmitHandler<formInput> = (data) => {
-		fetch('http://localhost:3001/api/auth/signup', {
+		fetch(import.meta.env.VITE_API_URL + '/api/auth/signup', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',

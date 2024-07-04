@@ -33,7 +33,7 @@ function ChartsPage() {
 	const [charts, setCharts] = useState<Chart[]>([]);
 
 	const getCharts = () => {
-		fetch('http://localhost:3001/api/charts/getcharts', {
+		fetch(import.meta.env.VITE_API_URL + '/api/charts/getcharts', {
 			method: 'GET',
 		})
 		.then(response => {

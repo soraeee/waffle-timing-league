@@ -72,7 +72,7 @@ function ProfilePage (props: any) {
 	let params = useParams();
 	
 	const getScores = () => {
-		fetch('http://localhost:3001/api/scores/getscores?id=' + params.id, {
+		fetch(import.meta.env.VITE_API_URL + '/api/scores/getscores?id=' + params.id, {
 			method: 'GET',
 		})
 		.then(response => {
@@ -119,7 +119,7 @@ function ProfilePage (props: any) {
 	}
 
 	const getUser = () => {
-		fetch('http://localhost:3001/api/profile/getuser?id=' + params.id, {
+		fetch(import.meta.env.VITE_API_URL + '/api/profile/getuser?id=' + params.id, {
 			method: 'GET',
 		})
 		.then(response => {

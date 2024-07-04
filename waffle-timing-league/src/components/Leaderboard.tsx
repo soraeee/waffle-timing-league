@@ -15,7 +15,7 @@ function Leaderboard () {
 	const [leaderboard, setLeaderboard] = useState<User[]>([]);
 
 	const getUserList = () => {
-		fetch('http://localhost:3001/api/profile/getuserlist', {
+		fetch(import.meta.env.VITE_API_URL + '/api/profile/getuserlist', {
 			method: 'GET',
 		})
 		.then(response => {

@@ -1,0 +1,3 @@
+# Create .env.development and .env.production for different API endpoints
+# Default to localhost for development
+VITE_API_URL = 'http://localhost:3001/'

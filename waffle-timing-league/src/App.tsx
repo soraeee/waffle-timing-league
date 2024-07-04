@@ -47,7 +47,7 @@ function App() {
 		let token = localStorage.getItem('accessToken');
 		if (token === null) token = "";
 		if (token !== "") {
-			fetch('http://localhost:3001/api/auth/getuser', {
+			fetch(import.meta.env.VITE_API_URL + '/api/auth/getuser', {
 					method: 'GET',
 					headers: {
 						'Content-Type': 'application/json',

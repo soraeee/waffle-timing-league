@@ -107,7 +107,7 @@ function ScoreUpload(props: any) {
 				})
 				
 				setProcessState(1);
-				fetch('http://localhost:3001/api/scores/addscores', {
+				fetch(import.meta.env.VITE_API_URL + '/api/scores/addscores', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
