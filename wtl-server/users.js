@@ -7,12 +7,18 @@ const sequelize = db.sequelize;
 const getPublicUserInfo = (req, res) => {
 	sequelize.query(
 		`SELECT * from (
-			SELECT * ,
+			SELECT 
+				id,
+				username,
+				pfp,
+				title,
+				total_points,
+				accuracy,
 			RANK () OVER ( 
 				ORDER BY total_points DESC
 			) ranking
 			from users
-		)
+		) as ranked_users
 		WHERE id = :id;`, // oh no
 		{
 			replacements: {id: req.query.id},
