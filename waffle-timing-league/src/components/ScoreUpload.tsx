@@ -44,7 +44,10 @@ function ScoreUpload(props: any) {
                 //console.log("Done reading");
 
 				let tournamentScores: Score[] = [];
-				const scores: any = dataObj["Stats"]["SongScores"]["Song"];
+				let scores: any = dataObj["Stats"]["SongScores"]["Song"];
+				if (!Array.isArray(scores)) {
+					scores = [scores];
+				}
 				scores.map((song: any) => {
 					// Check if song is in the correct pack
 					if (song["_attributes"]["Dir"].includes("Waffle Timing League")) {
