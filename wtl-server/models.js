@@ -57,6 +57,11 @@ const user = sequelize.define("users", {
 		defaultValue: "WTL Participant"
 	},
 
+	translit: {
+		type: DataTypes.BOOLEAN,
+		defaultValue: true,
+	},
+
 	isAdmin: {
 		type: DataTypes.BOOLEAN,
 		defaultValue: false,

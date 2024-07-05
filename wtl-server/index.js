@@ -39,6 +39,7 @@ app.get("/api/auth/getuser", auth.getUserInfo);
 // User routes
 app.get("/api/profile/getuser", users.getPublicUserInfo);
 app.get("/api/profile/getuserlist", users.getUserList);
+app.put("/api/profile/changesettings", users.changeSettings);
 
 /*const userBoard = (req, res) => { // Temp, should probably be moved to auth.js as "checkLoggedIn" and invoked on frontend when user attempts to access page requiring login
 	res.status(200).send("User Content.");

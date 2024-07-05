@@ -1,12 +1,24 @@
+interface userInfo {
+	loggedIn: boolean,
+	user: string,
+	title: string,
+	id: number,
+	pfp: string,
+	isAdmin: boolean,
+	useTranslit: boolean,
+	accessToken: string
+}
+
+interface IProps {
+	loginInfo: userInfo;
+}
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import ScoreCard from './ScoreCard';
 
-// SHUT THE FUCK UP ESLINT
-// eslint-disable-next-line
-function ProfilePage (props: any) {
+function ProfilePage ({ loginInfo }: any) {
 
 	interface Score {
 		id:					number; // score id?
@@ -232,7 +244,8 @@ function ProfilePage (props: any) {
 										score = {score}
 										index = {index}
 										activeCard = {activeCard} 
-										setActiveCard = {setActiveCard} 
+										setActiveCard = {setActiveCard}
+										useTranslit = {loginInfo.useTranslit}
 									/>
 								)
 							})}

@@ -35,9 +35,10 @@ interface IProps {
 	index: 			Number;
 	activeCard:		any;
 	setActiveCard:	any;
+	useTranslit:	boolean;
 }
 
-function ScoreCard({score, index, activeCard, setActiveCard}: IProps) {
+function ScoreCard({score, index, activeCard, setActiveCard, useTranslit}: IProps) {
 
 	let lampClass: string = "scorecard-lamp";
 	switch (score.lamp) {
@@ -74,8 +75,8 @@ function ScoreCard({score, index, activeCard, setActiveCard}: IProps) {
 					</p>
 				</div>
 				<div className="scorecard-titlegroup">
-					<p className="scorecard-title">{score.title}</p>
-					<p className="scorecard-subtitle">{score.subtitle}</p>
+					<p className="scorecard-title">{(useTranslit && score.titleTranslit) ? score.titleTranslit : score.title}</p>
+					<p className="scorecard-subtitle">{(useTranslit && score.subtitleTranslit) ? score.subtitleTranslit : score.subtitle}</p>
 				</div>
 				
 				<div className="scorecard-group">
@@ -105,39 +106,39 @@ function ScoreCard({score, index, activeCard, setActiveCard}: IProps) {
 				<div className = "scorecard-details-judges">
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-fa">Fa+</p>
-						<p>{score.w1}</p>
+						<p>{score.w1 != null ? score.w1 : "-"}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-wfa">Fa</p>
-						<p>{score.w2}</p>
+						<p>{score.w2 != null ? score.w2 : "-"}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-ex">Ex</p>
-						<p>{score.w3}</p>
+						<p>{score.w3 != null ? score.w3 : "-"}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-gr">Gr</p>
-						<p>{score.w4}</p>
+						<p>{score.w4 != null ? score.w4 : "-"}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-de">De</p>
-						<p>{score.w5}</p>
+						<p>{score.w5 != null ? score.w5 : "-"}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-wo">Wo</p>
-						<p>{score.w6}</p>
+						<p>{score.w6 != null ? score.w6 : "-"}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-mi">Mi</p>
-						<p>{score.w7}</p>
+						<p>{score.w7 != null ? score.w7 : "-"}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title">Ho+Ro</p>
-						<p>{score.holdsHit}/{score.holdsTotal}</p>
+						<p>{score.holdsHit != null ? score.holdsHit : "-"}/{score.holdsTotal}</p>
 					</div>
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title">Mines</p>
-						<p>{score.minesHit}</p>
+						<p>{score.minesHit != null ? score.minesHit : "-"}</p>
 					</div>
 				</div>
 			</div>

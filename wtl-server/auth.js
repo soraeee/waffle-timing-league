@@ -22,7 +22,7 @@ const checkDuplicateUsername = (req, res, next) => {
 	});
 };
 
-const verifyToken = (req, res, next) => {
+/*const verifyToken = (req, res, next) => {
 	let token = req.headers["x-access-token"];
 
 	if (!token) {
@@ -42,7 +42,17 @@ const verifyToken = (req, res, next) => {
 			req.userId = decoded.id;
 			next();
 		});
-};
+};*/
+
+// Token verification (i don't know if this is reasonable)
+const verifyToken = (token, uid) => {
+	let valid = false;
+	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+		if (err) return;
+		if (decoded.id == uid) valid = true;
+	});
+	return valid;
+}
 
 // Return user info based on a JWT token
 const getUserInfo = (req, res) => {
@@ -70,8 +80,10 @@ const getUserInfo = (req, res) => {
 				res.status(200).send({
 					id: user.id,
 					username: user.username,
+					title: user.title,
 					pfp: user.pfp,
 					isAdmin: user.isAdmin,
+					useTranslit: user.translit,
 					accessToken: token
 				});
 			})
@@ -138,7 +150,7 @@ const signin = (req, res) => {
 				{
 					algorithm: 'HS256',
 					allowInsecureKeySizes: true,
-					expiresIn: 86400, // 24 hours
+					expiresIn: 86400 * 30, // 1 month lole
 				});
 
 				res.status(200).send({

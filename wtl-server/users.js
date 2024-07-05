@@ -1,6 +1,7 @@
 require('dotenv').config()
 const { QueryTypes } = require('sequelize');
 const db = require("./models");
+const auth = require('./auth');
 const userdb = db.user;
 const sequelize = db.sequelize;
 
@@ -58,7 +59,33 @@ const getUserList = (req, res) => {
 	})
 }
 
+const changeSettings = (req, res) => {
+	let token = req.headers["x-access-token"];
+	if (auth.verifyToken(token, req.body.uid)) {
+		userdb.update({
+			pfp:		req.body.pfp,
+			title:		req.body.title,
+			translit:	req.body.useTranslit,
+		},
+		{
+			where: {
+				id: req.body.uid
+			}
+		})
+		.then((data) => {
+			res.status(200).send({ message: "User data updated successfully!"});
+		})
+		.catch(err => {
+			console.log(err.message);
+			res.status(500).send({ message: err.message });
+		});
+	} else {
+		return res.status(401).send({ message: "Invalid auth token!" });
+	}
+}
+
 module.exports = {
 	getPublicUserInfo,
 	getUserList,
+	changeSettings,
 }

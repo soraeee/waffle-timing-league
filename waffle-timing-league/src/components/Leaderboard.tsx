@@ -9,7 +9,7 @@ function Leaderboard () {
 		username:			string;
 		pfp:				string;
 		points:				number;
-		accuracy:				number;
+		accuracy:			number;
 	}
 
 	const [leaderboard, setLeaderboard] = useState<User[]>([]);

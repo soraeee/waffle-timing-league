@@ -29,6 +29,29 @@
 	}
 }
 
+.dropdown {
+	position: relative;
+	display: inline-block;
+
+	&-inner {
+		@include mixin.flex($dir: row, $gap: 3px, $x-align: center);
+	}
+
+	&:hover .dropdown-content {
+		@include mixin.flex($dir: column, $gap: 10px, $x-align: start);
+	}
+
+	&-content {
+		display: none;
+		position: absolute;
+		background-color: color.$b-dark5;
+		min-width: 140px;
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		padding: 12px 16px;
+		z-index: 2;
+	}
+}
+
 #nb-left {
 	width: 800px;
 	justify-content: flex-start;

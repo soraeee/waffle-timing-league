@@ -8,6 +8,7 @@
 @use 'components/warningmodal';
 @use 'components/auth';
 @use 'components/homepage';
+@use 'components/settings';
 
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -37,6 +38,15 @@ html {
 }
 
 a {
+	transition: filter 0.20s;
+
+	&:hover {
+		filter: drop-shadow(0 0 0.3rem color.$accent-b-pastel);
+		cursor: pointer;
+	}
+}
+
+.txt-btn {
 	transition: filter 0.20s;
 
 	&:hover {

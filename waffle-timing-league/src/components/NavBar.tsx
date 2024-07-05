@@ -1,10 +1,11 @@
+/// <reference types="vite-plugin-svgr/client" />
 import { NavLink, useNavigate } from 'react-router-dom';
+import ArrowDropDown from '../assets/arrowdropdown.svg?react';
 
 function NavBar (props: any) {
 
 	const navigate = useNavigate();
 
-	// TODO make this wipe the localstorage auth key
 	const logout = () => {
 		props.setLoginInfo({
 			loggedIn: false,
@@ -34,10 +35,17 @@ function NavBar (props: any) {
 					<div className = "navbar-group" id = "nb-right">
 						<div className = "navbar-usergroup">
 							<img src = {props.loginInfo.pfp}></img>
-							{/* TODO this should be a dropdown menu later */}
-							<NavLink to = {'/profile/' + props.loginInfo.id}><p>{props.loginInfo.user}</p></NavLink>
+							<div className = "dropdown">
+								<div className = "dropdown-inner">
+									<p>{props.loginInfo.user}</p>
+									<ArrowDropDown />
+								</div>
+								<div className = "dropdown-content">
+									<NavLink to = {'/settings'}><p>settings</p></NavLink>
+									<p className = "txt-btn" onClick={logout}>logout</p>
+								</div>
+							</div>
 						</div>
-						<p onClick={logout}>logout</p>
 					</div>
 				</div>
 				: 

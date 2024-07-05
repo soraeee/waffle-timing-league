@@ -1,0 +1,52 @@
+@use '../util/mixins' as mixin;
+@use '../util/color' as color;
+
+.settings {
+	background-color: color.$b-dark3;
+	width: 60%;
+	margin: 0 auto;
+	height: 100vh;
+
+	&-title {
+		margin-top: 20px;
+		font-size: 3.5em;
+		font-weight: 800;
+	}
+
+	&-subtitle {
+		font-size: 1.1em;
+		font-weight: 600;
+	}
+
+	&-container {	
+		@include mixin.flex($dir: column, $gap: 35px, $x-align: center, $align: center);
+		margin: 0px auto;
+		width: 45%;
+		background-color: color.$b-dark3;
+		border-radius: 4px;
+		
+		&-form {
+			@include mixin.flex($dir: column, $gap: 20px, $x-align: center, $align: center);
+			width: 60%;
+		}
+	}
+
+	&-group {
+		@include mixin.flex($dir: column, $gap: 5px, $x-align: flex-start, $align: flex-start);
+		width: 100%;
+
+		&-horizontal {
+			@include mixin.flex($dir: row, $gap: 15px, $x-align: center, $align: flex-start);
+			width: 100%;
+		}
+	}
+
+	&-checkbox {
+		position: relative;
+		top: 0;
+		left: 0;
+		height: 25px;
+		width: 25px;
+	}
+
+}

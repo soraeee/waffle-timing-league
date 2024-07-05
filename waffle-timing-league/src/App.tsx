@@ -12,15 +12,18 @@ import Login from './components/Login';
 import Registration from './components/Registration';
 import WarningModal from './components/WarningModal';
 import ChartsPage from './components/ChartsPage';
+import Settings from './components/Settings';
 
 function App() {
 
 	interface userInfo {
 		loggedIn: boolean,
 		user: string,
+		title: string,
 		id: number,
 		pfp: string,
 		isAdmin: boolean,
+		useTranslit: boolean,
 		accessToken: string
 	}
 	
@@ -35,9 +38,11 @@ function App() {
 	const [loginInfo, setLoginInfo] = useState<userInfo>({
 		loggedIn: false,
 		user: "",
+		title: "",
 		id: -1,
 		pfp: "https://i.imgur.com/scPEALU.png",
 		isAdmin: false,
+		useTranslit: true,
 		accessToken: ""
 	});
 
@@ -66,9 +71,11 @@ function App() {
 						setLoginInfo({
 							loggedIn: true,
 							user: data.username,
+							title: data.title,
 							id: data.id,
 							pfp: data.pfp,
 							isAdmin: data.isAdmin,
+							useTranslit: data.useTranslit,
 							accessToken: data.accessToken
 						})
 						localStorage.setItem('accessToken', data.accessToken); // i don't know if this is a good idea but who cares
@@ -89,6 +96,7 @@ function App() {
 					<Route path="/charts" element={<ChartsPage />} />
 					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} />} />
 					<Route path="/profile/:id" element={<ProfilePage loginInfo = {loginInfo}/>} />
+					<Route path="/settings" element={<Settings loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning}/>} />
 				</Routes>
 			</BrowserRouter>
 		</div>
