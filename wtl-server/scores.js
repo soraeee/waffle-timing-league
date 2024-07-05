@@ -99,12 +99,12 @@ const addScores = async (req, res) => {
 		
 		// Get the user of the score, then get the date when they last submitted scores
 		const user = await userdb.findByPk(uid);
-		console.log(uid);
-		console.log(user);
+		//console.log(uid);
+		//console.log(user);
 		if (user === null) {
 			return res.status(404).send({ message: "Invalid user id when submitting scores (this shouldn't happen lol)" });
 		}
-		dateCutoff = new Date(1720087982); // July 4 2AM because I'm stupid
+		dateCutoff = new Date(1720087982 * 1000); // July 4 2AM because I'm stupid
 		oldAcc = user.accuracy;
 		oldPoints = user.total_points;
 
@@ -118,7 +118,10 @@ const addScores = async (req, res) => {
 	
 			// Check if the score was set before the last submitted date, and ignore if so
 			// TODO this should be used to check if the score was submitted before WTL start date
-			if (date < dateCutoff) { // i hope this is how date compare works ! also probably technically impossible for date to equal the cutoff anyways
+			scoreDate = new Date(date);
+			//console.log(scoreDate);
+			//console.log(dateCutoff);
+			if (scoreDate < dateCutoff) { // i hope this is how date compare works ! also probably technically impossible for date to equal the cutoff anyways
 				console.log("Date for score for " + folderTitle + " is set before the date cutoff" );
 				checks = false;
 			}
@@ -135,15 +138,18 @@ const addScores = async (req, res) => {
 				console.log("Could not find a matching chart in chartdb when submitting a score for " + folderTitle + "???" );
 				checks = false;
 			}
-			if ((scoreNotecount != curChart.note_count) || (holdsHit > curChart.holds_rolls_count) || (minesHit > curChart.mines_count)) {
-				console.log("Notecount (or holds/rolls/mine) for score for " + folderTitle + " does not match with the chart (recieved notecount: " + scoreNotecount + ", expected: " + curChart.note_count + ")");
-				checks = false;
-			}
 
-			// Ignore score if cmod was used on a No CMOD chart
-			if (curChart.no_cmod && cmod) {
-				console.log("Score for " + folderTitle + " used CMOD but chart is marked as No CMOD")
-				checks = false;
+			if (curChart) {			
+				if ((scoreNotecount != curChart.note_count) || (holdsHit > curChart.holds_rolls_count) || (minesHit > curChart.mines_count)) {
+					console.log("Notecount (or holds/rolls/mine) for score for " + folderTitle + " does not match with the chart (recieved notecount: " + scoreNotecount + ", expected: " + curChart.note_count + ")");
+					checks = false;
+				}
+
+				// Ignore score if cmod was used on a No CMOD chart
+				if (curChart.no_cmod && cmod) {
+					console.log("Score for " + folderTitle + " used CMOD but chart is marked as No CMOD")
+					checks = false;
+				}
 			}
 
 			// Do the real score processing
