@@ -47,8 +47,7 @@ function ScoreUpload(props: any) {
 				const scores: any = dataObj["Stats"]["SongScores"]["Song"];
 				scores.map((song: any) => {
 					// Check if song is in the correct pack
-					// TODO: Change this to "Waffle Timing League"
-					if (song["_attributes"]["Dir"].includes("_wtl demo")) {
+					if (song["_attributes"]["Dir"].includes("Waffle Timing League")) {
 						const title: string = song["_attributes"]["Dir"].split("/")[2];
 						//console.log(song["_attributes"]["Dir"]);
 						//console.log(song["Steps"]["HighScoreList"]["HighScore"]);

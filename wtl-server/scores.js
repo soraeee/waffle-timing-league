@@ -82,20 +82,21 @@ const getScores = (req, res) => {
 // TODO: prob return the actual chart title instead of the folder title
 // TODO: calc ranking points for the score, and also send the amount of RP gain through the response
 const addScores = async (req, res) => {
-	const uid = req.body[0].uid;
-	let dateCutoff;
-
-	// Previous values for comparison later
-	let oldAcc;
-	let oldPoints;
-
-	let updatedScores = [];
-	let scoresreq = req.body;
-
-	// Precalc log base
-	const base = 1 / Math.log(1.1032889141348);
 
 	try {
+		const uid = req.body[0].uid;
+		let dateCutoff;
+
+		// Previous values for comparison later
+		let oldAcc;
+		let oldPoints;
+
+		let updatedScores = [];
+		let scoresreq = req.body;
+
+		// Precalc log base
+		const base = 1 / Math.log(1.1032889141348);
+		
 		// Get the user of the score, then get the date when they last submitted scores
 		const user = await userdb.findByPk(uid);
 		console.log(uid);
