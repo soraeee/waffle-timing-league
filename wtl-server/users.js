@@ -62,23 +62,27 @@ const getUserList = (req, res) => {
 const changeSettings = (req, res) => {
 	let token = req.headers["x-access-token"];
 	if (auth.verifyToken(token, req.body.uid)) {
-		userdb.update({
-			pfp:		req.body.pfp,
-			title:		req.body.title,
-			translit:	req.body.useTranslit,
-		},
-		{
-			where: {
-				id: req.body.uid
-			}
-		})
-		.then((data) => {
-			res.status(200).send({ message: "User data updated successfully!"});
-		})
-		.catch(err => {
-			console.log(err.message);
-			res.status(500).send({ message: err.message });
-		});
+		if (req.body.title.length <= 30) { // max 30 chars title
+			userdb.update({
+				pfp:		req.body.pfp,
+				title:		req.body.title,
+				translit:	req.body.useTranslit,
+			},
+			{
+				where: {
+					id: req.body.uid
+				}
+			})
+			.then((data) => {
+				res.status(200).send({ message: "User data updated successfully!"});
+			})
+			.catch(err => {
+				console.log(err.message);
+				res.status(500).send({ message: err.message });
+			});
+		} else {
+			return res.status(400).send({ message: "Title cannot be longer than 30 characters!" });
+		}
 	} else {
 		return res.status(401).send({ message: "Invalid auth token!" });
 	}

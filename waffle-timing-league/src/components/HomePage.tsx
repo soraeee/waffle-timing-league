@@ -27,7 +27,9 @@ function HomePage () {
 
 			<div className = "home-paragraph">
 				<span className = "home-bold home-important">alpha dev changelog (help meeee)</span>
-				<p className = "home-text"><span className = "home-bold">7/3/24</span> - added settings page; ability to change title/pfp, transliteration switch</p>
+				<p className = "home-text"><span className = "home-bold">7/6/24</span> - various authentication and validation improvements/fixes</p>
+				<p className = "home-text"><span className = "home-bold">7/5/24</span> - various score submission fixes</p>
+				<p className = "home-text"><span className = "home-bold">7/4/24</span> - added settings page; ability to change title/pfp, transliteration switch</p>
 			</div>
 
 			<div className = "home-paragraph">

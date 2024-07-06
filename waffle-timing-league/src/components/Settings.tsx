@@ -25,7 +25,7 @@ function Settings({ loginInfo, setLoginInfo, setWarning }: IProps) {
 		useTranslit:	boolean,
 	}
 
-	const { register, handleSubmit, setValue } = useForm<formInput>();
+	const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm<formInput>();
 	const onSubmit: SubmitHandler<formInput> = (data) => {
 		fetch(import.meta.env.VITE_API_URL + '/api/profile/changesettings', {
 					method: 'PUT',
@@ -65,7 +65,7 @@ function Settings({ loginInfo, setLoginInfo, setWarning }: IProps) {
 		setValue("pfp", loginInfo.pfp, { shouldValidate: true });
 		setValue("title", loginInfo.title, { shouldValidate: true });
 		setValue("useTranslit", loginInfo.useTranslit);
-	}, [])
+	}, [loginInfo])
 	return (
 		<div className = "settings">
 			{loginInfo.loggedIn ? 
@@ -92,7 +92,11 @@ function Settings({ loginInfo, setLoginInfo, setWarning }: IProps) {
 								{...register("title",
 									{
 										required: true,
+										validate: (value: string) => {
+											return value.length <= 30 || "test";
+										}
 									}
+									
 								)}
 							/>
 						</div>

@@ -35,8 +35,11 @@ function Login(props: any) {
 						props.setLoginInfo({
 							loggedIn: true,
 							user: data.username,
+							title: data.title,
 							id: data.id,
 							pfp: data.pfp,
+							isAdmin: data.isAdmin,
+							useTranslit: data.useTranslit,
 							accessToken: data.accessToken
 						})
 						localStorage.setItem('accessToken', data.accessToken); // i don't know if this is a good idea but who cares

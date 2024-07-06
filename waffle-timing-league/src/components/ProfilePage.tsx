@@ -1,3 +1,9 @@
+import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { useForm, SubmitHandler } from "react-hook-form";
+
+import ScoreCard from './ScoreCard';
+
 interface userInfo {
 	loggedIn: boolean,
 	user: string,
@@ -12,11 +18,6 @@ interface userInfo {
 interface IProps {
 	loginInfo: userInfo;
 }
-import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
-import { useForm, SubmitHandler } from "react-hook-form";
-
-import ScoreCard from './ScoreCard';
 
 function ProfilePage ({ loginInfo }: any) {
 
@@ -86,74 +87,88 @@ function ProfilePage ({ loginInfo }: any) {
 	let params = useParams();
 	
 	const getScores = () => {
-		fetch(import.meta.env.VITE_API_URL + '/api/scores/getscores?id=' + params.id, {
-			method: 'GET',
-		})
-		.then(response => {
-			return response.text();
-		})
-		.then(data => {
-			const obj = JSON.parse(data);
-			const parsedScores: Score[] = obj.scores.map((score: any) => {
-				return {
-					id:					score.id,
-					title:				score.title,			
-					subtitle:			score.subtitle,
-					titleTranslit:		score.title_translit,	
-					subtitleTranslit:	score.subtitle_translit,	
-					artist:				score.artist,	
-					artistTranslit:		score.artist_translit,
-					difficulty:			score.difficulty,
+		if (user.id != Number(params.id)) { // Prevent excessive query calls if the profile id doesn't chnage on rerender
+			fetch(import.meta.env.VITE_API_URL + '/api/scores/getscores?id=' + params.id, {
+				method: 'GET',
+			})
+			.then(response => {
+				return response.text();
+			})
+			.then(data => {
+				const obj = JSON.parse(data);
+				const parsedScores: Score[] = obj.scores.map((score: any) => {
+					return {
+						id:					score.id,
+						title:				score.title,			
+						subtitle:			score.subtitle,
+						titleTranslit:		score.title_translit,	
+						subtitleTranslit:	score.subtitle_translit,	
+						artist:				score.artist,	
+						artistTranslit:		score.artist_translit,
+						difficulty:			score.difficulty,
 
-					dpPercent:			score.dp_percent,
-					points:				score.points,
+						dpPercent:			Number(score.dp_percent).toFixed(2),
+						points:				score.points,
 
-					w1:					score.w1,
-					w2:					score.w2,
-					w3:					score.w3,
-					w4:					score.w4,
-					w5:					score.w5,
-					w6:					score.w6,
-					w7:					score.w7,
+						w1:					score.w1,
+						w2:					score.w2,
+						w3:					score.w3,
+						w4:					score.w4,
+						w5:					score.w5,
+						w6:					score.w6,
+						w7:					score.w7,
 
-					lamp:				score.lamp,
+						lamp:				score.lamp,
 
-					holdsHit:			score.holds_hit,
-					holdsTotal:			score.holds_rolls_count,
-					minesHit:			score.mines_hit,
-					date:				new Date(score.date),
-					uid:				score.user_id,
-					rank:				score.ranking,
-				}
+						holdsHit:			score.holds_hit,
+						holdsTotal:			score.holds_rolls_count,
+						minesHit:			score.mines_hit,
+						date:				new Date(score.date),
+						uid:				score.user_id,
+						rank:				score.ranking,
+					}
+				});
+				//console.log(obj);
+				setScores(parsedScores);
+				setDisplayedScores(parsedScores);
 			});
-			console.log(obj);
-			setScores(parsedScores);
-			setDisplayedScores(parsedScores);
-		});
+		}
 	}
 
 	const getUser = () => {
-		fetch(import.meta.env.VITE_API_URL + '/api/profile/getuser?id=' + params.id, {
-			method: 'GET',
-		})
-		.then(response => {
-			if (response.status == 404) setValidUser(false); // Don't load the page when an invalid user is requested
-			return response.text();
-		})
-		.then(data => {
-			const obj = JSON.parse(data);
+		if (user.id != Number(params.id)) { // Prevent excessive query calls if the profile id doesn't chnage on rerender
 			setUser({
-				id:			obj.id,
-				username:	obj.username,
-				pfp:		obj.pfp,
-				title:		obj.title,
-				points:		obj.totalPoints,
-				accuracy:	obj.accuracy,
-				rank:		obj.rank,
+				id:			-1,
+				username:	'lol',
+				pfp:		'https://i.imgur.com/scPEALU.png',
+				title:		'test title please ignore',
+				points:		0,
+				accuracy:	0.00,
+				rank:		-1,
+			});
+			fetch(import.meta.env.VITE_API_URL + '/api/profile/getuser?id=' + params.id, {
+				method: 'GET',
 			})
-		});
+			.then(response => {
+				if (response.status == 404) setValidUser(false); // Don't load the page when an invalid user is requested
+				return response.text();
+			})
+			.then(data => {
+				const obj = JSON.parse(data);
+				setUser({
+					id:			obj.id,
+					username:	obj.username,
+					pfp:		obj.pfp,
+					title:		obj.title,
+					points:		obj.totalPoints,
+					accuracy:	obj.accuracy,
+					rank:		obj.rank,
+				})
+			});
+		}
 	}
 
+	// Score search handler
 	const onSubmit: SubmitHandler<SearchInput> = (data) => {
 		const input: string = data.search.toLowerCase();
 		const newScores: Score[] = scores.filter((score: Score) => {
@@ -168,7 +183,7 @@ function ProfilePage ({ loginInfo }: any) {
 	useEffect(() => {
 		getScores();
 		getUser();
-	}, [])
+	}, [params])
 
 	return (
 		<> {validUser

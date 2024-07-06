@@ -3,7 +3,22 @@ import { useState, useCallback } from 'react'
 import xmlJs from 'xml-js';
 import Dropzone from 'react-dropzone';
 
-function ScoreUpload(props: any) {
+interface userInfo {
+	loggedIn: boolean,
+	user: string,
+	title: string,
+	id: number,
+	pfp: string,
+	isAdmin: boolean,
+	useTranslit: boolean,
+	accessToken: string
+}
+
+interface IProps {
+	loginInfo: userInfo;
+}
+
+function ScoreUpload({ loginInfo }: IProps) {
 
 	const [processState, setProcessState] = useState<number>(0); // 0 - default, 1 - loading, 2 - recieved updates
 	const [scoreUpdates, setScoreUpdates] = useState<Update[]>([]);
@@ -77,7 +92,7 @@ function ScoreUpload(props: any) {
 											cmod: sc["Modifiers"]["_text"].startsWith('C'),
 
 											date: sc["DateTime"]["_text"],
-											uid: props.loginInfo.id,
+											uid: loginInfo.id,
 										});
 									}
 								})
@@ -100,7 +115,7 @@ function ScoreUpload(props: any) {
 										cmod: score["Modifiers"]["_text"].startsWith('C'),
 
 										date: score["DateTime"]["_text"],
-										uid: props.loginInfo.id,
+										uid: loginInfo.id,
 									});
 								}
 							}
@@ -113,6 +128,7 @@ function ScoreUpload(props: any) {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
+						'x-access-token': loginInfo.accessToken,
 					},
 					body: JSON.stringify(tournamentScores),
 					})
@@ -149,7 +165,7 @@ function ScoreUpload(props: any) {
 			}
 			reader.readAsDataURL(file);
 		});
-	}, [props.loginInfo.id]);
+	}, [loginInfo.id]);
 
 	return (
 		<div className = "submit-container">
@@ -157,7 +173,7 @@ function ScoreUpload(props: any) {
 				<p className = "submit-container-title">Upload Scores</p>
 				<p className = "submit-container-info">Your Stats.xml can be found at [ITGM install location]\Save\LocalProfiles\[profile number]</p>
 			</div>
-			{props.loginInfo.loggedIn
+			{loginInfo.loggedIn
 				? <div>
 					{processState === 0 
 						// default

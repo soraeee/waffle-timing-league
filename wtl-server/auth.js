@@ -47,6 +47,8 @@ const checkDuplicateUsername = (req, res, next) => {
 // Token verification (i don't know if this is reasonable)
 const verifyToken = (token, uid) => {
 	let valid = false;
+	//console.log(token);
+	//console.log(uid);
 	jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
 		if (err) return;
 		if (decoded.id == uid) valid = true;
@@ -156,8 +158,10 @@ const signin = (req, res) => {
 				res.status(200).send({
 					id: user.id,
 					username: user.username,
+					title: user.title,
 					pfp: user.pfp,
 					isAdmin: user.isAdmin,
+					useTranslit: user.translit,
 					accessToken: token
 				});
 		})
