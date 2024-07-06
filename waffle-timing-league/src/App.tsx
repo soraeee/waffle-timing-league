@@ -94,7 +94,7 @@ function App() {
 					<Route path="/register" element={<Registration loginInfo = {loginInfo} />} />
 					<Route path="/leaderboard" element={<Leaderboard />} />
 					<Route path="/charts" element={<ChartsPage />} />
-					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} />} />
+					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} setWarning = {setWarning} />} />
 					<Route path="/profile/:id" element={<ProfilePage loginInfo = {loginInfo}/>} />
 					<Route path="/settings" element={<Settings loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning}/>} />
 				</Routes>

@@ -4,21 +4,22 @@ import xmlJs from 'xml-js';
 import Dropzone from 'react-dropzone';
 
 interface userInfo {
-	loggedIn: boolean,
-	user: string,
-	title: string,
-	id: number,
-	pfp: string,
-	isAdmin: boolean,
-	useTranslit: boolean,
-	accessToken: string
+	loggedIn: 		boolean,
+	user: 			string,
+	title: 			string,
+	id: 			number,
+	pfp: 			string,
+	isAdmin: 		boolean,
+	useTranslit: 	boolean,
+	accessToken: 	string
 }
 
 interface IProps {
-	loginInfo: userInfo;
+	loginInfo: 		userInfo;
+	setWarning: 	any;
 }
 
-function ScoreUpload({ loginInfo }: IProps) {
+function ScoreUpload({ loginInfo, setWarning }: IProps) {
 
 	const [processState, setProcessState] = useState<number>(0); // 0 - default, 1 - loading, 2 - recieved updates
 	const [scoreUpdates, setScoreUpdates] = useState<Update[]>([]);
@@ -124,24 +125,30 @@ function ScoreUpload({ loginInfo }: IProps) {
 				})
 				
 				setProcessState(1);
-				fetch(import.meta.env.VITE_API_URL + '/api/scores/addscores', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-						'x-access-token': loginInfo.accessToken,
-					},
-					body: JSON.stringify(tournamentScores),
-					})
-					.then(response => {
-						return response.text();
-					})
-					.then(data => {
-						console.log(data);
-						const obj = JSON.parse(data);
-						setScoreUpdates(obj.updates);
-						setProfileUpdates([obj.pointsDiff, Math.floor(obj.accDiff * 100) / 100]);
-						setProcessState(2);
-				});
+				// don't send scores if there are no scores to send
+				if (tournamentScores.length > 0) {
+					fetch(import.meta.env.VITE_API_URL + '/api/scores/addscores', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+							'x-access-token': loginInfo.accessToken,
+						},
+						body: JSON.stringify(tournamentScores),
+						})
+						.then(response => {
+							return response.text();
+						})
+						.then(data => {
+							console.log(data);
+							const obj = JSON.parse(data);
+							setScoreUpdates(obj.updates);
+							setProfileUpdates([obj.pointsDiff, Math.floor(obj.accDiff * 100) / 100]);
+							setProcessState(2);
+					});
+				} else {
+					setProcessState(0);
+					setWarning({enabled: true, message: "There are no valid scores to upload!", type: 1})
+				}
 
 				//setParsedStats(tournamentScores);
 				//console.log(scores);
