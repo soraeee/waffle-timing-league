@@ -156,9 +156,19 @@ function ChartsPage({ loginInfo }: IProps) {
 					
 					{/* Display charts */}
 					{displayedCharts.map((chart: Chart) => {
+						let diffClass: string = "charts-list-card-difficulty ";
+						switch (chart.slot) {
+							case 'Novice':		diffClass += ' diff-novice'; 	break;
+							case 'Easy':		diffClass += ' diff-easy'; 		break;
+							case 'Medium':		diffClass += ' diff-medium'; 	break;
+							case 'Hard':		diffClass += ' diff-hard';		break;
+							case 'Challenge':	diffClass += ' diff-expert';	break;
+							case 'Edit':		diffClass += ' diff-edit'; 		break;
+						}
+
 						return (
 							<NavLink to = {'/chart/' + chart.id} key = {chart.id} className = "charts-list-card">
-								<div className="charts-list-card-difficulty">
+								<div className={diffClass}>
 									<p className="charts-list-card-difficulty-text">
 										{chart.difficulty}
 									</p>

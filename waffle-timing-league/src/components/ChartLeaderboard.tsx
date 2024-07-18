@@ -222,7 +222,7 @@ function ChartLeaderboard() {
 
 	useEffect(() => {
 		getLeaderboard();
-	})
+	}, [])
 	return (
 		<>
 			{(chart.id != -1) ? <div className = "chleaderboard">

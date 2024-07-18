@@ -239,6 +239,7 @@ function ProfilePage ({ loginInfo }: any) {
 	useEffect(() => {
 		getScores();
 		getUser();
+		setActiveCard(-1);
 	}, [params])
 
 	/*useEffect(() => {
