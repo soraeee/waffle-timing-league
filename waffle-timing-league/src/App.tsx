@@ -12,6 +12,7 @@ import Login from './components/Login';
 import Registration from './components/Registration';
 import WarningModal from './components/WarningModal';
 import ChartsPage from './components/ChartsPage';
+import ChartLeaderboard from './components/ChartLeaderboard';
 import Settings from './components/Settings';
 
 function App() {
@@ -93,7 +94,8 @@ function App() {
 					<Route path="/login" element={<Login loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning} />} />
 					<Route path="/register" element={<Registration loginInfo = {loginInfo} />} />
 					<Route path="/leaderboard" element={<Leaderboard />} />
-					<Route path="/charts" element={<ChartsPage />} />
+					<Route path="/charts" element={<ChartsPage loginInfo = {loginInfo} />} />
+					<Route path="/chart/:id" element={<ChartLeaderboard />} />
 					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} setWarning = {setWarning} />} />
 					<Route path="/profile/:id" element={<ProfilePage loginInfo = {loginInfo}/>} />
 					<Route path="/settings" element={<Settings loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning}/>} />

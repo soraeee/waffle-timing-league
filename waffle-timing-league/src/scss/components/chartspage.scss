@@ -1,0 +1,127 @@
+@use '../util/mixins' as mixin;
+@use '../util/color' as color;
+@use "sass:map";
+
+.charts-list {
+	background-color: color.$b-dark3;
+	width: 60%;
+	margin: 0 auto;
+	height: 100%;
+
+	&-container {
+		@include mixin.flex($dir: column, $gap: 35px, $x-align: center, $align: center);
+		margin: 0px auto;
+		width: 100%;
+	}
+
+	&-title {
+		margin-top: 20px;
+		font-size: 3.5em;
+		font-weight: 800;
+	}
+
+	&-cards {	
+		@include mixin.flex($dir: column, $gap: 10px, $x-align: center, $align: flex-start);
+		margin-bottom: 20px;
+		width: 100%;
+	}
+
+	&-header {
+		width: 90%;
+		background-color: color.$b-dark4;
+		height: 40px;
+
+		display: grid;
+		grid-template-columns: 70px 50%;
+		align-items: center;
+		align-content: center;
+		column-gap: 0px;
+
+		&-text {
+			font-size: 1.1em;
+			font-weight: 600;
+			
+			-moz-user-select: -moz-none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			-ms-user-select: none;
+			user-select: none;
+		}
+
+		&-group {
+			@include mixin.flex($dir: row, $gap: 2px, $x-align: center, $align: flex-start);
+		}
+
+		padding-left: 15px;
+	}
+
+	/* ooh i'm coopying code!! im the coopier !!! the 21 year old code coopier */
+	&-card {
+		width: 90%;
+		background-color: color.$b-dark2;
+		height: 40px;
+		z-index: 2;
+
+		display: grid;
+		grid-template-columns: 40px 50% 12% auto auto;
+		align-items: center;
+		column-gap: 30px;
+
+		padding-left: 15px;
+
+		transition: box-shadow 0.20s;
+		
+		&:hover {
+			box-shadow: 0px 0px 10px color.$accent-b-pastel;
+			cursor: pointer;
+		}
+
+		&-difficulty {
+			width: 40px;
+			height: 40px;
+			background-color: map.get(color.$diffs, "expert");
+			@include mixin.flex($dir: column, $x-align: center, $align: center);
+	
+			&-text {
+				text-align: center;
+				width: 60px;
+				color: color.$dark2;
+				font-size: 1.5em;
+				font-weight: 600;
+			}
+		}
+
+		&-start {
+			height: 40px;
+			min-width: 15px;
+			background-color: color.$b-dark4;
+		}
+
+		&-titlegroup {
+			@include mixin.flex($dir: row, $gap: 10px, $x-align: center, $align: start);
+			&-inner {
+				@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
+			}
+		}
+
+		&-title {
+			font-size: 1.3em;
+			font-weight: 600;
+		}
+	
+		&-subtitle {
+			font-size: 0.8em;
+			font-style: italic;
+			font-weight: 200;
+		}
+	}
+	
+	&-nocmod {
+		width: 25px;
+		height: 25px;
+
+		fill: color.$warning-lite;
+		stroke: color.$warning-lite;
+		stroke-width: 50px;
+	}
+}

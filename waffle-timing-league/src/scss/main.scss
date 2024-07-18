@@ -9,6 +9,9 @@
 @use 'components/auth';
 @use 'components/homepage';
 @use 'components/settings';
+@use 'components/chartspage';
+@use 'components/scorecard';
+@use 'components/chartleaderboard';
 
 :root {
 	font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;

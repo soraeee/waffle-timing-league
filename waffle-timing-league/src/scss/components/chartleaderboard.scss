@@ -1,0 +1,144 @@
+@use '../util/mixins' as mixin;
+@use '../util/color' as color;
+
+.chleaderboard {
+	@include mixin.flex($dir: column, $gap: 20px, $x-align: center, $align: flex-start);
+	background-color: color.$b-dark3;
+	width: 60%;
+	margin: 0 auto;
+	height: 100%;
+
+	&-chartinfo {
+		@include mixin.flex($dir: row, $gap: 35px, $x-align: flex-start, $align: space-between);
+		margin: 20px auto 0px auto;
+		width: 90%;
+
+		&-left {	
+			@include mixin.flex($dir: column, $gap: 10px, $x-align: flex-start, $align: flex-start);
+		}
+		&-right {	
+			@include mixin.flex($dir: column, $gap: 20px, $x-align: flex-end, $align: flex-start);
+		}
+
+		&-title {	
+			@include mixin.flex($dir: column, $gap: 5px, $x-align: flex-start, $align: flex-start);
+			&-text {
+				font-size: 3em;
+				font-weight: 800;
+			}
+			&-subtext {
+				font-size: 1.2em;
+				font-weight: 400;
+				font-style: italic;
+			}
+		}
+
+		&-difficulty {
+			@include mixin.flex($dir: row, $gap: 0px, $x-align: center, $align: flex-start);
+			&-block {
+				width: 40px;
+				height: 40px;
+				//background-color: map.get(color.$diffs, "expert");
+				@include mixin.flex($dir: column, $x-align: center, $align: center);
+			}
+	
+			&-text {
+				text-align: center;
+				width: 60px;
+				color: color.$dark2;
+				font-size: 1.5em;
+				font-weight: 600;
+			}
+
+			&-slot {
+				height: 40px;
+				background-color: color.$dark2;
+				@include mixin.flex($dir: column, $x-align: center, $align: center);
+
+				&-text {
+					text-align: center;
+					vertical-align: middle;
+					padding: 0px 10px;
+					color: color.$lite;
+					font-size: 1.3em;
+					font-weight: 800;
+					font-style: oblique;
+				}
+			}
+		}
+
+		&-meta {
+			@include mixin.flex($dir: column, $gap: 6px, $x-align: flex-end, $align: center);
+
+			&-title {
+				font-size: 1.1em;
+				font-weight: 600;
+				background-color: color.$dark2;
+				padding: 5px 10px;
+			}
+
+			&-text {
+				font-size: 1.1em;
+				font-weight: 400;
+			}
+		}
+
+		&-nocmod {
+			display: inline-block;
+			background-color: color.$warning-lite;
+			color: color.$lite;
+			padding: 6px 6px;
+			margin-left: 10px;
+			
+			font-size: 1.1em;
+			font-style: italic;
+		}
+	}
+
+	&-scores {
+		@include mixin.flex($dir: column, $gap: 10px, $x-align: center, $align: flex-start);
+
+		margin-bottom: 20px;
+		width: 100%;
+
+		&-header {
+			width: 90%;
+			background-color: color.$b-dark4;
+			height: 40px;
+
+			display: grid;
+			grid-template-columns: 105px 50% 10% 10% 10%;
+			align-items: center;
+			align-content: center;
+			column-gap: 20px;
+
+			&-text {
+				font-size: 1.1em;
+				font-weight: 600;
+				
+				-moz-user-select: -moz-none;
+				-khtml-user-select: none;
+				-webkit-user-select: none;
+				-ms-user-select: none;
+				user-select: none;
+			}
+
+			&-group {
+				@include mixin.flex($dir: row, $gap: 2px, $x-align: center, $align: flex-start);
+			}
+
+			#header-rank {
+				padding-left: 15px
+			}
+
+			#header-date {
+				@media (max-width: 1799.9px) {
+					display: none;
+				}
+				@media (min-width: 1800px) {
+					display: flex;
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,154 @@
+@use '../util/mixins' as mixin;
+@use '../util/color' as color;
+@use "sass:map";
+
+.scorecard {
+	width: 90%;
+	background-color: color.$b-dark2;
+	height: 40px;
+	z-index: 2;
+	//@include mixin.flex($dir: row, $gap: 20px, $x-align: center, $align: flex-start);
+		
+	display: grid;
+	grid-template-columns: 70px 15px 40px 45% 10% 10% 10%;
+	align-items: center;
+	column-gap: 20px;
+	
+	transition: box-shadow 0.20s;
+
+	&:hover {
+		box-shadow: 0px 0px 10px color.$accent-b-pastel;
+		cursor: pointer;
+	}
+
+	&-wrapper {
+		@include mixin.flex($dir: column, $gap: 0px, $x-align: center, $align: flex-start);
+		width: 100%;
+	}
+
+	&-inner {
+		//width: 100%;
+		@include mixin.flex($dir: row, $gap: 120px, $x-align: center, $align: flex-start);
+	}
+
+	&-rank {
+		//width: 70px;
+		height: 40px;
+		background-color: color.$b-dark4;
+		@include mixin.flex($dir: column, $x-align: center, $align: center);
+
+		&-text {
+			//width: 70px;
+			font-size: 1.8em;
+			font-weight: 800;
+			font-style: italic;
+			text-align: center;
+		}
+	}
+
+	&-difficulty {
+		width: 40px;
+		height: 40px;
+		//background-color: map.get(color.$diffs, "expert");
+		@include mixin.flex($dir: column, $x-align: center, $align: center);
+
+		&-text {
+			text-align: center;
+			width: 60px;
+			color: color.$dark2;
+			font-size: 1.5em;
+			font-weight: 600;
+		}
+	}
+
+	&-lamp {
+		min-width: 12px;
+		height: 40px;
+	}
+
+	&-titlegroup {
+		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
+	}
+	&-group {
+		@include mixin.flex($dir: column, $x-align: flex-start, $align: center);
+		#points {
+			font-weight: 600;
+			font-size: 1.2em;
+		}
+		#dp {
+			color: color.$accent-y-pastel;
+			font-weight: 600;
+			font-size: 1.2em;
+		}
+		#date {
+			font-style: italic;
+			font-weight: 400;
+			font-size: 1.2em;
+			@media (max-width: 1799.9px) {
+				display: none;
+			}
+			@media (min-width: 1800px) {
+				display: block;
+			}
+		}
+	}
+
+	&-title {
+		font-size: 1.3em;
+		font-weight: 600;
+	}
+
+	&-subtitle {
+		font-size: 0.8em;
+		font-style: italic;
+		font-weight: 200;
+	}
+
+	&-stats {
+		@include mixin.flex($dir: row, $gap: 70px, $x-align: center, $align: flex-start);
+	}
+
+	&-details {
+		@include mixin.flex($dir: column, $gap: 5px, $x-align: center, $align: center);
+		width: 90%;
+		height: 75px;
+		background-color: color.$b-dark5;
+
+		&-judges {
+			@include mixin.flex($dir: row, $gap: 40px, $x-align: center, $align: center);
+
+			&-group {
+				@include mixin.flex($dir: column, $gap: 5px, $x-align: center, $align: center);
+			}
+			
+
+			&-title {
+				font-weight: 800;
+			}
+		}
+	}
+}
+
+.chartscorecard {
+	width: 90%;
+	background-color: color.$b-dark2;
+	height: 40px;
+	z-index: 2;
+		
+	display: grid;
+	grid-template-columns: 70px 15px 50% 10% 10% 10%;
+	align-items: center;
+	column-gap: 20px;
+	
+	transition: box-shadow 0.20s;
+
+	&:hover {
+		box-shadow: 0px 0px 10px color.$accent-b-pastel;
+		cursor: pointer;
+	}
+
+	&-username-text {
+		font-size: 1.3em;
+		font-weight: 600;
+	}
+}

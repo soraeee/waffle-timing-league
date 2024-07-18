@@ -1,8 +1,13 @@
+/// <reference types="vite-plugin-svgr/client" />
+
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import ScoreCard from './ScoreCard';
+
+import ArrowDropDown from '../assets/arrowdropdown.svg?react';
+import ArrowDropUp from '../assets/arrowdropup.svg?react';
 
 interface userInfo {
 	loggedIn: boolean,
@@ -30,6 +35,7 @@ function ProfilePage ({ loginInfo }: any) {
 		artist:				string;	
 		artistTranslit:		string;	
 		difficulty:			number;
+		slot:				string;
 
 		dpPercent:			number;
 		points:				number;
@@ -66,6 +72,11 @@ function ProfilePage ({ loginInfo }: any) {
 	interface SearchInput {
 		search: string;
 	}
+
+	interface SortType {
+		col: string;
+		asc: boolean;
+	}
 	
 	const { register, handleSubmit } = useForm<SearchInput>();
 
@@ -75,6 +86,9 @@ function ProfilePage ({ loginInfo }: any) {
 
 	const [scores, setScores] = useState<Score[]>([]);
 	const [displayedScores, setDisplayedScores] = useState<Score[]>([]);
+
+	const [chartSort, setChartSort] = useState<SortType>({col: "dpPercent", asc: false});
+
 	const [user, setUser] = useState<User>({
 		id:			-1,
 		username:	'lol',
@@ -84,6 +98,7 @@ function ProfilePage ({ loginInfo }: any) {
 		accuracy:	0.00,
 		rank:		-1,
 	});
+
 	let params = useParams();
 	
 	const getScores = () => {
@@ -106,6 +121,7 @@ function ProfilePage ({ loginInfo }: any) {
 						artist:				score.artist,	
 						artistTranslit:		score.artist_translit,
 						difficulty:			score.difficulty,
+						slot:				score.slot,
 
 						dpPercent:			Number(score.dp_percent).toFixed(2),
 						points:				score.points,
@@ -168,6 +184,46 @@ function ProfilePage ({ loginInfo }: any) {
 		}
 	}
 
+	// Handle changing sort type
+	const changeSort = (type: string) => {
+		let curAsc: boolean = chartSort.asc;
+		if (chartSort.col == type) {
+			setChartSort({col: type, asc: !curAsc});
+			curAsc = !curAsc;
+		} else {
+			setChartSort({col: type, asc: false});
+			curAsc = false;
+		}
+		
+		let scores: Score[] = displayedScores;
+		console.log(scores);
+		setDisplayedScores(
+			scores.sort((a: Score, b: Score) => {
+				let titleA = a["title"];
+				let titleB = b["title"];
+				if (a["titleTranslit"]) titleA = a["titleTranslit"];
+				if (b["titleTranslit"]) titleB = b["titleTranslit"];
+				// bruh
+				if (curAsc) {
+					switch (type) {
+						case "title":			return titleA.localeCompare(titleB, undefined, { numeric: true });
+						case "date":			return a["date"] < b["date"] ? -1 : 1;
+						case "difficulty":		return a["difficulty"] - b["difficulty"];
+						case "dpPercent":		return a["dpPercent"] - b["dpPercent"];
+					}
+				} else {
+					switch (type) {
+						case "title":			return titleB.localeCompare(titleA, undefined, { numeric: true });
+						case "date":			return b["date"] < a["date"] ? -1 : 1;
+						case "difficulty":		return b["difficulty"] - a["difficulty"];
+						case "dpPercent":		return b["dpPercent"] - a["dpPercent"];
+					}
+				}
+				return 1;
+			})
+		);
+	}
+
 	// Score search handler
 	const onSubmit: SubmitHandler<SearchInput> = (data) => {
 		const input: string = data.search.toLowerCase();
@@ -184,6 +240,10 @@ function ProfilePage ({ loginInfo }: any) {
 		getScores();
 		getUser();
 	}, [params])
+
+	/*useEffect(() => {
+		sortScores();
+	}, [chartSort])*/
 
 	return (
 		<> {validUser
@@ -251,7 +311,47 @@ function ProfilePage ({ loginInfo }: any) {
 								<input className = "search-btn" type = "submit" value = "Search"/>
 							</form>
 						</div>
+						
 						<div className = "profile-scores-display">
+							{/* absolute fucking mess of a sort bar */}
+							<div className = "profile-scores-display-header">
+								<div className = "profile-scores-display-header-group" id = "header-rank">
+									<p className = "profile-scores-display-header-text">Rank</p>
+								</div>
+								<div className = "profile-scores-display-header-group txt-btn" onClick = {() => changeSort("difficulty")}>
+									<p className = "profile-scores-display-header-text" id = "header-diff">Diff</p>
+									<div className = "sort-arrow-group">
+										<ArrowDropUp className = {(chartSort.col == "difficulty" && chartSort.asc) ? "sort-arrow-up sort-arrow-active" : "sort-arrow-up"}/>
+										<ArrowDropDown className = {(chartSort.col == "difficulty" && !chartSort.asc) ? "sort-arrow-down sort-arrow-active" : "sort-arrow-down"}/>
+									</div>
+								</div>
+								<div className = "profile-scores-display-header-group txt-btn" onClick = {() => changeSort("title")}>
+									<p className = "profile-scores-display-header-text">Title</p>
+									<div className = "sort-arrow-group">
+										<ArrowDropUp className = {(chartSort.col == "title" && chartSort.asc) ? "sort-arrow-up sort-arrow-active" : "sort-arrow-up"}/>
+										<ArrowDropDown className = {(chartSort.col == "title" && !chartSort.asc) ? "sort-arrow-down sort-arrow-active" : "sort-arrow-down"}/>
+									</div>
+								</div>
+								<div className = "profile-scores-display-header-group txt-btn" onClick = {() => changeSort("dpPercent")}>
+									<p className = "profile-scores-display-header-text">EX %</p>
+									<div className = "sort-arrow-group">
+										<ArrowDropUp className = {(chartSort.col == "dpPercent" && chartSort.asc) ? "sort-arrow-up sort-arrow-active" : "sort-arrow-up"}/>
+										<ArrowDropDown className = {(chartSort.col == "dpPercent" && !chartSort.asc) ? "sort-arrow-down sort-arrow-active" : "sort-arrow-down"}/>
+									</div>
+								</div>
+								<div className = "profile-scores-display-header-group">
+									<p className = "profile-scores-display-header-text">Points</p>
+								</div>
+								<div className = "profile-scores-display-header-group txt-btn" id = "header-date" onClick = {() => changeSort("date")}>
+									<p className = "profile-scores-display-header-text">Date</p>
+									<div className = "sort-arrow-group">
+										<ArrowDropUp className = {(chartSort.col == "date" && chartSort.asc) ? "sort-arrow-up sort-arrow-active" : "sort-arrow-up"}/>
+										<ArrowDropDown className = {(chartSort.col == "date" && !chartSort.asc) ? "sort-arrow-down sort-arrow-active" : "sort-arrow-down"}/>
+									</div>
+								</div>
+							</div>
+
+							{/* Display score cards */}
 							{displayedScores.map((score, index) => {
 								return (
 									<ScoreCard 

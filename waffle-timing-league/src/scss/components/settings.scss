@@ -22,8 +22,6 @@
 		@include mixin.flex($dir: column, $gap: 35px, $x-align: center, $align: center);
 		margin: 0px auto;
 		width: 45%;
-		background-color: color.$b-dark3;
-		border-radius: 4px;
 		
 		&-form {
 			@include mixin.flex($dir: column, $gap: 20px, $x-align: center, $align: center);

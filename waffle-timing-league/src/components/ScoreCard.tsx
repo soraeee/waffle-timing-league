@@ -1,4 +1,5 @@
-interface Score {
+// Used for ProfilePage.tsx
+interface ProfileScore {
 	id:					number; // score id?
 	title:				string;	
 	subtitle:			string;	
@@ -7,6 +8,7 @@ interface Score {
 	artist:				string;	
 	artistTranslit:		string;	
 	difficulty:			number;
+	slot:				string;
 
 	dpPercent:			number;
 	points:				number;
@@ -30,15 +32,45 @@ interface Score {
 	rank:				number;	// score's rank relative to user's other scores
 }
 
+// Used for ChartLeaderboard.tsx
+interface ChartScore {
+	id:					number,
+	points:				number,
+	dpPercent:			number,
+
+	w1:					number,
+	w2:					number,
+	w3:					number,
+	w4:					number,
+	w5:					number,
+	w6:					number,
+	w7:					number,
+
+	holdsHit:			number,
+	minesHit:			number,
+	holdsTotal:			number,
+	lamp:				number,
+	date:				Date,
+
+	uid:				number,
+	username:			string,
+	rank:				number,
+}
+
 interface IProps {
-	score: 			Score;
-	index: 			Number;
+	score: 			ProfileScore | ChartScore;
+	index: 			number;
 	activeCard:		any;
 	setActiveCard:	any;
-	useTranslit:	boolean;
+	useTranslit?:	boolean;
 }
 
 function ScoreCard({score, index, activeCard, setActiveCard, useTranslit}: IProps) {
+
+	// Distinguish between scores on profile page vs chart leaderboard
+	const isProfileScore = (object: any): object is ProfileScore => {
+		return 'title' in object;
+	}
 
 	let lampClass: string = "scorecard-lamp";
 	switch (score.lamp) {
@@ -49,7 +81,36 @@ function ScoreCard({score, index, activeCard, setActiveCard, useTranslit}: IProp
 		case 3:		lampClass += ' lamp-fec';		break;
 		case 4:		lampClass += ' lamp-quad';		break;
 		case 5:		lampClass += ' lamp-quint'; 	break;
-	} 
+	}
+
+	let parsedTitle = "";
+	let parsedTitleTranslit = "";
+	let diffClass: string = "scorecard-difficulty ";
+	
+	if (isProfileScore(score)) {
+		switch (score.slot) {
+			case 'Novice':		diffClass += ' diff-novice'; 	break;
+			case 'Easy':		diffClass += ' diff-easy'; 		break;
+			case 'Medium':		diffClass += ' diff-medium'; 	break;
+			case 'Hard':		diffClass += ' diff-hard';		break;
+			case 'Challenge':	diffClass += ' diff-expert';	break;
+			case 'Edit':		diffClass += ' diff-edit'; 		break;
+		}
+		
+		// bruh
+		parsedTitle = score.title;
+		parsedTitleTranslit = score.titleTranslit;
+
+		parsedTitle = parsedTitle.replace("(Hard)", "");
+		parsedTitle = parsedTitle.replace("(Medium)", "");
+		parsedTitle = parsedTitle.replace("(Easy)", "");
+		parsedTitle = parsedTitle.replace("(Novice)", "");
+
+		parsedTitleTranslit = parsedTitleTranslit.replace("(Hard)", "");
+		parsedTitleTranslit = parsedTitleTranslit.replace("(Medium)", "");
+		parsedTitleTranslit = parsedTitleTranslit.replace("(Easy)", "");
+		parsedTitleTranslit = parsedTitleTranslit.replace("(Novice)", "");
+	}
 
 	const toggleActive = () => {
 		if (activeCard == index) {
@@ -61,45 +122,72 @@ function ScoreCard({score, index, activeCard, setActiveCard, useTranslit}: IProp
 
 	return (
 		<div className = "scorecard-wrapper">
-			<div key={score.id} className="scorecard" onClick = {toggleActive}>
-				<div className="scorecard-rank">
-					{score.rank != null
-						? <p className="scorecard-rank-text">{score.rank}</p>
-						: <p className="scorecard-rank-text">-</p>
-					}
-				</div>
-				<div className = {lampClass}></div>
-				<div className="scorecard-difficulty">
-					<p className="scorecard-difficulty-text">
-						{score.difficulty}
-					</p>
-				</div>
-				<div className="scorecard-titlegroup">
-					<p className="scorecard-title">{(useTranslit && score.titleTranslit) ? score.titleTranslit : score.title}</p>
-					<p className="scorecard-subtitle">{(useTranslit && score.subtitleTranslit) ? score.subtitleTranslit : score.subtitle}</p>
+			{isProfileScore(score) ?
+				<div key={score.id} className="scorecard" onClick = {toggleActive}>
+					{/* Profile page score card */}
+					<div className="scorecard-rank">
+						{score.rank != null
+							? <p className="scorecard-rank-text">{score.rank}</p>
+							: <p className="scorecard-rank-text">-</p>
+						}
+					</div>
+					<div className = {lampClass}></div>
+					<div className= {diffClass}>
+						<p className="scorecard-difficulty-text">
+							{score.difficulty}
+						</p>
+					</div>
+					<div className="scorecard-titlegroup">
+						<p className="scorecard-title">{(useTranslit && parsedTitleTranslit) ? parsedTitleTranslit : parsedTitle}</p>
+						<p className="scorecard-subtitle">{(useTranslit && score.subtitleTranslit) ? score.subtitleTranslit : score.subtitle}</p>
+					</div>
+					
+					<div className="scorecard-group">
+						{score.rank != null
+							? <p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
+							: <p className="scorecard-stats-text" id="dp">-%</p>
+						}
+					</div>
+					
+					<div className="scorecard-group">
+						{score.rank != null
+							? <p className="scorecard-stats-text" id="points">{score.points} pts.</p>
+							: <p className="scorecard-stats-text" id="points">- pts.</p>
+						}
+					</div>
+					
+					<div className="scorecard-group">
+						{score.rank != null
+							? <p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDay()}/{score.date.getFullYear()}</p>
+							: <p className="scorecard-stats-text" id="date">-/-/-</p>
+						}
+					</div>
 				</div>
 				
-				<div className="scorecard-group">
-					{score.rank != null
-						? <p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
-						: <p className="scorecard-stats-text" id="dp">-%</p>
-					}
+				: <div key={score.id} className="chartscorecard" onClick = {toggleActive}> 
+					{/* Chart page score card */}
+					<div className="scorecard-rank">
+						<p className="scorecard-rank-text">{score.rank}</p>
+					</div>
+					<div className = {lampClass}></div>
+					<div className="scorecard-group">
+						<p className = "chartscorecard-username-text">{score.username}</p>
+					</div>
+					
+					<div className="scorecard-group">
+						<p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
+					</div>
+					
+					<div className="scorecard-group">
+						<p className="scorecard-stats-text" id="points">{score.points} pts.</p>
+					</div>
+					
+					<div className="scorecard-group">
+						<p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDay()}/{score.date.getFullYear()}</p>
+					</div>
 				</div>
-				
-				<div className="scorecard-group">
-					{score.rank != null
-						? <p className="scorecard-stats-text" id="points">{score.points} pts.</p>
-						: <p className="scorecard-stats-text" id="points">- pts.</p>
-					}
-				</div>
-				
-				<div className="scorecard-group">
-					{score.rank != null
-						? <p className="scorecard-stats-text" id="date">{score.date.getMonth()}/{score.date.getDay()}/{score.date.getFullYear()}</p>
-						: <p className="scorecard-stats-text" id="date">-/-/-</p>
-					}
-				</div>
-			</div>
+			}
+
 			
 			{activeCard == index 
 			? <div className = "scorecard-details">

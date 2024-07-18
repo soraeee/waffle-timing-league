@@ -53,6 +53,7 @@ app.post('/api/scores/addscores', scores.addScores);
 
 // Chart routes
 app.get('/api/charts/getcharts', charts.getCharts);
+app.get('/api/charts/getleaderboard', charts.getChartLeaderboard);
 
 // Default
 app.get("/", (req, res) => res.send("cool server"));

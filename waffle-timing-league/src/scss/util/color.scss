@@ -60,6 +60,12 @@ $juds: (
     "mi":   #e66a6a,
 );
 
+@each $diff in map.keys($diffs) {
+    .diff-#{$diff} {
+      background-color: map.get($diffs, $diff);
+    }
+}
+
 @each $lamp in map.keys($lamps) {
     .lamp-#{$lamp} {
       background-color: map.get($lamps, $lamp);

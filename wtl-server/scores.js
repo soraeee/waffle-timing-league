@@ -34,6 +34,7 @@ const getScores = (req, res) => {
 			c.artist,
 			c.artist_translit,
 			c.difficulty,
+			c.slot,
 
 			s.dp_percent,
 			s.points,
@@ -56,7 +57,7 @@ const getScores = (req, res) => {
 			s.user_id,
 			(case when s.points is not null
 				then rank () over ( 
-					order by points desc NULLS LAST, date asc 
+					order by points desc NULLS LAST
 				)
 			end) as ranking
 			from charts as c
@@ -87,7 +88,7 @@ const addScores = async (req, res) => {
 		const uid = req.body[0].uid;
 		let token = req.headers["x-access-token"];
 		if (auth.verifyToken(token, uid)) {
-			let dateCutoff;
+			const dateCutoff = new Date(1720087982 * 1000); // July 4 2AM because I'm stupid
 
 			// Previous values for comparison later
 			let oldAcc;
@@ -106,7 +107,7 @@ const addScores = async (req, res) => {
 			if (user === null) {
 				return res.status(404).send({ message: "Invalid user id when submitting scores (this shouldn't happen lol)" });
 			}
-			dateCutoff = new Date(1720087982 * 1000); // July 4 2AM because I'm stupid
+			
 			oldAcc = user.accuracy;
 			oldPoints = user.total_points;
 
@@ -293,9 +294,10 @@ const addScores = async (req, res) => {
 				totalPercent += +score.dataValues["dp_percent"];
 				newPoints += +score.dataValues["points"];
 			});
-			const newAcc = Math.floor(totalPercent / scoreCount * 100) / 100;
+			let newAcc = Math.floor(totalPercent / scoreCount * 100) / 100;
+			if (isNaN(newAcc)) newAcc = 0.00
 			await userdb.update({
-				accuracy: newAcc,
+				accuracy: newAcc.toFixed(2),
 				total_points: newPoints,
 			},
 			{

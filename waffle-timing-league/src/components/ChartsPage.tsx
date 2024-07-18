@@ -1,8 +1,48 @@
-
-// import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { NavLink } from 'react-router-dom';
 
-function ChartsPage() {
+import ArrowDropDown from '../assets/arrowdropdown.svg?react';
+import ArrowDropUp from '../assets/arrowdropup.svg?react';
+import BlockIcon from '../assets/block.svg?react';
+
+interface userInfo {
+	loggedIn: boolean,
+	user: string,
+	title: string,
+	id: number,
+	pfp: string,
+	isAdmin: boolean,
+	useTranslit: boolean,
+	accessToken: string
+}
+
+interface IProps {
+	loginInfo: userInfo;
+}
+
+interface Chart {
+	id:					number,
+	folderTitle:		string,
+	title:				string,
+	subtitle:			string,
+	titleTranslit:		string,
+	subtitleTranslit:	string,
+	artist:				string,
+	artistTranslit:		string,
+	displaybpm1:		number,
+	displaybpm2:		number,
+	difficulty:			number,
+	slot:				string,
+	credit:				string,
+	noCmod:				boolean,
+}
+
+interface SortType {
+	col: string;
+	asc: boolean;
+}
+
+function ChartsPage({ loginInfo }: IProps) {
 
 	/* enum DifficultySlot {
 		CHALLENGE = 0,
@@ -13,24 +53,11 @@ function ChartsPage() {
 		EDIT,
 	} */
 
-	interface Chart {
-		id:					number,
-		folderTitle:		string,
-		title:				string,
-		subtitle:			string,
-		titleTranslit:		string,
-		subtitleTranslit:	string,
-		artist:				string,
-		artistTranslit:		string,
-		displaybpm1:		number,
-		displaybpm2:		number,
-		difficulty:			number,
-		slot:				string,
-		credit:				string,
-		noCmod:				boolean,
-	}
 
 	const [charts, setCharts] = useState<Chart[]>([]);
+	const [displayedCharts, setDisplayedCharts] = useState<Chart[]>([]);
+	
+	const [chartSort, setChartSort] = useState<SortType>({col: "difficulty", asc: true});
 
 	const getCharts = () => {
 		fetch(import.meta.env.VITE_API_URL + '/api/charts/getcharts', {
@@ -56,12 +83,47 @@ function ChartsPage() {
 					difficulty:			chart.difficulty,
 					slot:				chart.slot,
 					credit:				chart.credit,
-					nocmod:				chart.no_cmod,
+					noCmod:				chart.no_cmod,
 				}
 			});
-			console.log(chartsArr);
 			setCharts(chartsArr);
+			setDisplayedCharts(chartsArr);
 		});
+	}
+
+	// Handle changing sort type
+	const changeSort = (type: string) => {
+		let curAsc: boolean = chartSort.asc;
+		if (chartSort.col == type) {
+			setChartSort({col: type, asc: !curAsc});
+			curAsc = !curAsc;
+		} else {
+			setChartSort({col: type, asc: false});
+			curAsc = false;
+		}
+		
+		let charts: Chart[] = displayedCharts;
+		setDisplayedCharts(
+			charts.sort((a: Chart, b: Chart) => {
+				let titleA = a["title"];
+				let titleB = b["title"];
+				if (a["titleTranslit"]) titleA = a["titleTranslit"];
+				if (b["titleTranslit"]) titleB = b["titleTranslit"];
+				// bruh
+				if (curAsc) {
+					switch (type) {
+						case "title":			return titleA.localeCompare(titleB, undefined, { numeric: true });
+						case "difficulty":		return a["difficulty"] - b["difficulty"];
+					}
+				} else {
+					switch (type) {
+						case "title":			return titleB.localeCompare(titleA, undefined, { numeric: true });
+						case "difficulty":		return b["difficulty"] - a["difficulty"];
+					}
+				}
+				return 1;
+			})
+		);
 	}
 
 	useEffect(() => {
@@ -69,17 +131,51 @@ function ChartsPage() {
 	}, []);
 
 	return (
-		<>
-			{charts.map((chart: Chart) => {
-				return (
-					<div key = {chart.id}>
-						<p>{chart.artist}</p>
-						<p>{chart.title}</p>
-						<p>{chart.subtitle}</p>
+		<div className = "charts-list">
+			<div className = "charts-list-container">
+				<p className = "charts-list-title">Charts</p>
+				<div className = "charts-list-cards">
+
+					{/* Sort header */}
+					<div className = "charts-list-header">
+						<div className = "charts-list-header-group txt-btn" onClick = {() => changeSort("difficulty")}>
+							<p className = "charts-list-header-text" id = "header-diff">Diff</p>
+							<div className = "sort-arrow-group">
+								<ArrowDropUp className = {(chartSort.col == "difficulty" && chartSort.asc) ? "sort-arrow-up sort-arrow-active" : "sort-arrow-up"}/>
+								<ArrowDropDown className = {(chartSort.col == "difficulty" && !chartSort.asc) ? "sort-arrow-down sort-arrow-active" : "sort-arrow-down"}/>
+							</div>
+						</div>
+						<div className = "charts-list-header-group txt-btn" onClick = {() => changeSort("title")}>
+							<p className = "charts-list-header-text">Title</p>
+							<div className = "sort-arrow-group">
+								<ArrowDropUp className = {(chartSort.col == "title" && chartSort.asc) ? "sort-arrow-up sort-arrow-active" : "sort-arrow-up"}/>
+								<ArrowDropDown className = {(chartSort.col == "title" && !chartSort.asc) ? "sort-arrow-down sort-arrow-active" : "sort-arrow-down"}/>
+							</div>
+						</div>
 					</div>
-				)
-			})}
-		</>
+					
+					{/* Display charts */}
+					{displayedCharts.map((chart: Chart) => {
+						return (
+							<NavLink to = {'/chart/' + chart.id} key = {chart.id} className = "charts-list-card">
+								<div className="charts-list-card-difficulty">
+									<p className="charts-list-card-difficulty-text">
+										{chart.difficulty}
+									</p>
+								</div>
+								<div className = "charts-list-card-titlegroup">
+									<div className = "charts-list-card-titlegroup-inner">
+										<p className = "charts-list-card-title">{(loginInfo.useTranslit && chart.titleTranslit) ? chart.titleTranslit : chart.title}</p>
+										<p className = "charts-list-card-subtitle">{(loginInfo.useTranslit && chart.subtitleTranslit) ? chart.subtitleTranslit : chart.subtitle}</p>
+									</div>
+									{chart.noCmod ? <BlockIcon className = "charts-list-nocmod"/> : null}
+								</div>
+							</NavLink>
+						)
+					})}
+				</div>
+			</div>
+		</div>
 	)
 }
 

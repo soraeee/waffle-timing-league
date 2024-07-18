@@ -3,6 +3,8 @@ const db = require("./models");
 const pack = require("./pack.json");
 
 const chartsdb = db.charts;
+const sequelize = db.sequelize;
+const { QueryTypes } = require('sequelize');
 
 // Should be only run once after truncating the charts table (probably will add duplicate charts if you run it more than once)
 const createCharts = () => {
@@ -52,7 +54,59 @@ const getCharts = (req, res) => {
 	})
 }
 
+const getChartLeaderboard = async (req, res) => {
+	try {
+		const chart = await chartsdb.findOne({
+			where: {
+				id: req.query.id
+			}
+		})
+		const scores = await sequelize.query(`
+			select 
+				s.id as score_id,
+				s.folder_title,
+				s.points,
+				s.dp_percent,
+				s.w1,
+				s.w2,
+				s.w3,
+				s.w4,
+				s.w5,
+				s.w6,
+				s.w7,
+
+				s.holds_hit,
+				s.mines_hit,
+
+				s.lamp,
+				s.date,
+				s.user_id,
+
+				u.username,
+				(case when s.points is not null
+					then rank () over ( 
+						order by points desc NULLS LAST
+					)
+				end) as ranking
+				from scores as s
+				right join users as u on u.id = s.user_id
+				where s.folder_title = :title
+		`,
+		{
+			replacements: {title: chart.folder_title},
+			type: QueryTypes.SELECT
+		},)
+		res.status(200).send({
+			chart: chart,
+			scores: scores
+		})
+	} catch (err) {
+		res.status(500).send({ message: err.message });
+	}
+}
+
 module.exports = {
 	createCharts,
 	getCharts,
+	getChartLeaderboard,
 };
