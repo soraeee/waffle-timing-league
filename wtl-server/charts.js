@@ -43,7 +43,9 @@ const createCharts = () => {
 }
 
 const getCharts = (req, res) => {
-	chartsdb.findAll()
+	chartsdb.findAll({
+		order: [['difficulty', 'ASC']]
+	})
 	.then((data) => {
 		if (data.length == 0) {
 			return res.status(404).send({ message: "No charts found." });
