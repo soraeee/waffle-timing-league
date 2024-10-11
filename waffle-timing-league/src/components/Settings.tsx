@@ -1,29 +1,20 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useEffect } from 'react';
 
-interface userInfo {
-	loggedIn: boolean,
-	user: string,
-	title: string,
-	id: number,
-	pfp: string,
-	isAdmin: boolean,
-	useTranslit: boolean,
-	accessToken: string
-}
+import useStore from '../stores';
 
-interface IProps {
-	loginInfo:		userInfo;
-	setLoginInfo:	any;
-	setWarning:		any;
-}
+function Settings() {
 
-function Settings({ loginInfo, setLoginInfo, setWarning }: IProps) {
 	interface formInput {
 		pfp:			string,
 		title:			string,
 		useTranslit:	boolean,
 	}
+	
+	const user = useStore((state) => state.user);
+	const setUser = useStore((state) => state.setUser);
+
+	const setWarning = useStore((state) => state.setWarning);
 
 	const { register, handleSubmit, setValue, setError, formState: { errors } } = useForm<formInput>();
 	const onSubmit: SubmitHandler<formInput> = (data) => {
@@ -31,10 +22,10 @@ function Settings({ loginInfo, setLoginInfo, setWarning }: IProps) {
 					method: 'PUT',
 					headers: {
 						'Content-Type': 'application/json',
-						'x-access-token': loginInfo.accessToken
+						'x-access-token': user.accessToken
 					},
 					body: JSON.stringify({
-						uid:		loginInfo.id,
+						uid:		user.id,
 						pfp: 		data.pfp,
 						title: 		data.title,
 						translit: 	data.useTranslit,
@@ -45,15 +36,15 @@ function Settings({ loginInfo, setLoginInfo, setWarning }: IProps) {
 							console.log("User update failed (replace this later)")
 							throw new Error("HTTP status " + response.status);
 						} else {
-							setLoginInfo({
+							setUser({
 								loggedIn: 		true,
-								user:			loginInfo.user,
+								user:			user.user,
 								title:			data.title,
-								id:				loginInfo.id,
+								id:				user.id,
 								pfp:			data.pfp,
-								isAdmin:		loginInfo.isAdmin,
+								isAdmin:		user.isAdmin,
 								useTranslit:	data.useTranslit,
-								accessToken:	loginInfo.accessToken,
+								accessToken:	user.accessToken,
 							})
 							setWarning({enabled: true, message: "Settings saved!", type: 0})
 						}
@@ -62,13 +53,13 @@ function Settings({ loginInfo, setLoginInfo, setWarning }: IProps) {
 	}
 
 	useEffect(() => {
-		setValue("pfp", loginInfo.pfp, { shouldValidate: true });
-		setValue("title", loginInfo.title, { shouldValidate: true });
-		setValue("useTranslit", loginInfo.useTranslit);
-	}, [loginInfo])
+		setValue("pfp", user.pfp, { shouldValidate: true });
+		setValue("title", user.title, { shouldValidate: true });
+		setValue("useTranslit", user.useTranslit);
+	}, [user])
 	return (
 		<div className = "settings">
-			{loginInfo.loggedIn ? 
+			{user.loggedIn ? 
 				<div className = "settings-container">
 					<p className = "settings-title">Settings</p>
 					<form onSubmit = {handleSubmit(onSubmit)} className = "settings-container-form">

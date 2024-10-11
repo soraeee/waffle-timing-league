@@ -1,6 +1,8 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useNavigate } from 'react-router-dom';
 
+import useStore from '../stores';
+
 interface formInput {
 	username:			string,
 	email:				string,
@@ -8,9 +10,11 @@ interface formInput {
 	passwordConfirm:	string,
 }
 
-function Registration(props: any) {
+function Registration() {
 
 	const navigate = useNavigate();
+	
+	const user = useStore((state) => state.user);
 
 	const { register, handleSubmit, getValues } = useForm<formInput>();
 	const onSubmit: SubmitHandler<formInput> = (data) => {
@@ -37,7 +41,7 @@ function Registration(props: any) {
 
 	return (
 		<>
-			{!props.loginInfo.loggedIn 
+			{!user.loggedIn 
 			? <div className = "auth-container">
 				<p className = "auth-title">new to WTL?</p>
 				<form onSubmit = {handleSubmit(onSubmit)} className = "auth-container-form">

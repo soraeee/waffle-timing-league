@@ -9,22 +9,11 @@ import ScoreCard from './ScoreCard';
 import ArrowDropDown from '../assets/arrowdropdown.svg?react';
 import ArrowDropUp from '../assets/arrowdropup.svg?react';
 
-interface userInfo {
-	loggedIn: boolean,
-	user: string,
-	title: string,
-	id: number,
-	pfp: string,
-	isAdmin: boolean,
-	useTranslit: boolean,
-	accessToken: string
-}
+import useStore from '../stores';
 
-interface IProps {
-	loginInfo: userInfo;
-}
-
-function ProfilePage ({ loginInfo }: any) {
+function ProfilePage () {
+	
+	const loginUser = useStore((state) => state.user);
 
 	interface Score {
 		id:					number; // score id?
@@ -361,7 +350,7 @@ function ProfilePage ({ loginInfo }: any) {
 										index = {index}
 										activeCard = {activeCard} 
 										setActiveCard = {setActiveCard}
-										useTranslit = {loginInfo.useTranslit}
+										useTranslit = {loginUser.useTranslit}
 									/>
 								)
 							})}

@@ -19,7 +19,8 @@
     "sharp": "^0.33.4",
     "tesseract.js": "^5.1.0",
     "xml-js": "^1.6.11",
-    "yarn": "^1.22.22"
+    "yarn": "^1.22.22",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
     "@types/imagemagick": "^0.0.35",

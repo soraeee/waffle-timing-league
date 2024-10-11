@@ -2,6 +2,9 @@
 
 import NavBar from './components/NavBar';
 
+//import { UserInfo, Warning } from './stores';
+import useStore from './stores';
+
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import ProfilePage from './components/ProfilePage';
@@ -17,37 +20,9 @@ import Settings from './components/Settings';
 
 function App() {
 
-	interface userInfo {
-		loggedIn: boolean,
-		user: string,
-		title: string,
-		id: number,
-		pfp: string,
-		isAdmin: boolean,
-		useTranslit: boolean,
-		accessToken: string
-	}
-	
-    interface Warning {
-        enabled: boolean,
-        message: string,
-        type: number
-    }
-
-	// Global states I think
-    const [warning, setWarning] = useState<Warning>({enabled: false, message: "", type: 0})
-	const [loginInfo, setLoginInfo] = useState<userInfo>({
-		loggedIn: false,
-		user: "",
-		title: "",
-		id: -1,
-		pfp: "https://i.imgur.com/scPEALU.png",
-		isAdmin: false,
-		useTranslit: true,
-		accessToken: ""
-	});
-
-	// TODO useEffect that runs on initial page render, get access token from localstorage and send to server to get ID
+	const warning = useStore((state) => state.warning);
+	const setWarning = useStore((state) => state.setWarning);
+	const setUser = useStore((state) => state.setUser);
 
 	useEffect(() => {
 		let token = localStorage.getItem('accessToken');
@@ -69,7 +44,7 @@ function App() {
 						return response.json();
 					})
 					.then(data => {
-						setLoginInfo({
+						setUser({
 							loggedIn: true,
 							user: data.username,
 							title: data.title,
@@ -87,18 +62,18 @@ function App() {
 	return (
 		<div className="main">
 			<BrowserRouter>
-				<NavBar loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning} />
+				<NavBar />
             	{warning.enabled && <WarningModal warning = {warning} setWarning = {setWarning} />}
 				<Routes>
 					<Route path="/" element={<HomePage />} />
-					<Route path="/login" element={<Login loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning} />} />
-					<Route path="/register" element={<Registration loginInfo = {loginInfo} />} />
+					<Route path="/login" element={<Login />} />
+					<Route path="/register" element={<Registration />} />
 					<Route path="/leaderboard" element={<Leaderboard />} />
-					<Route path="/charts" element={<ChartsPage loginInfo = {loginInfo} />} />
+					<Route path="/charts" element={<ChartsPage />} />
 					<Route path="/chart/:id" element={<ChartLeaderboard />} />
-					<Route path="/submit" element={<ScoreUpload loginInfo = {loginInfo} setWarning = {setWarning} />} />
-					<Route path="/profile/:id" element={<ProfilePage loginInfo = {loginInfo}/>} />
-					<Route path="/settings" element={<Settings loginInfo = {loginInfo} setLoginInfo = {setLoginInfo} setWarning = {setWarning}/>} />
+					<Route path="/submit" element={<ScoreUpload />} />
+					<Route path="/profile/:id" element={<ProfilePage />} />
+					<Route path="/settings" element={<Settings />} />
 				</Routes>
 			</BrowserRouter>
 		</div>

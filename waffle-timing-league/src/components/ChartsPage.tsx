@@ -5,20 +5,7 @@ import ArrowDropDown from '../assets/arrowdropdown.svg?react';
 import ArrowDropUp from '../assets/arrowdropup.svg?react';
 import BlockIcon from '../assets/block.svg?react';
 
-interface userInfo {
-	loggedIn: boolean,
-	user: string,
-	title: string,
-	id: number,
-	pfp: string,
-	isAdmin: boolean,
-	useTranslit: boolean,
-	accessToken: string
-}
-
-interface IProps {
-	loginInfo: userInfo;
-}
+import useStore from '../stores';
 
 interface Chart {
 	id:					number,
@@ -42,7 +29,7 @@ interface SortType {
 	asc: boolean;
 }
 
-function ChartsPage({ loginInfo }: IProps) {
+function ChartsPage() {
 
 	/* enum DifficultySlot {
 		CHALLENGE = 0,
@@ -52,7 +39,8 @@ function ChartsPage({ loginInfo }: IProps) {
 		NOVICE,
 		EDIT,
 	} */
-
+	
+	const user = useStore((state) => state.user);
 
 	const [charts, setCharts] = useState<Chart[]>([]);
 	const [displayedCharts, setDisplayedCharts] = useState<Chart[]>([]);
@@ -175,8 +163,8 @@ function ChartsPage({ loginInfo }: IProps) {
 								</div>
 								<div className = "charts-list-card-titlegroup">
 									<div className = "charts-list-card-titlegroup-inner">
-										<p className = "charts-list-card-title">{(loginInfo.useTranslit && chart.titleTranslit) ? chart.titleTranslit : chart.title}</p>
-										<p className = "charts-list-card-subtitle">{(loginInfo.useTranslit && chart.subtitleTranslit) ? chart.subtitleTranslit : chart.subtitle}</p>
+										<p className = "charts-list-card-title">{(user.useTranslit && chart.titleTranslit) ? chart.titleTranslit : chart.title}</p>
+										<p className = "charts-list-card-subtitle">{(user.useTranslit && chart.subtitleTranslit) ? chart.subtitleTranslit : chart.subtitle}</p>
 									</div>
 									{chart.noCmod ? <BlockIcon className = "charts-list-nocmod"/> : null}
 								</div>

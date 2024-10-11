@@ -3,23 +3,13 @@ import { useState, useCallback } from 'react'
 import xmlJs from 'xml-js';
 import Dropzone from 'react-dropzone';
 
-interface userInfo {
-	loggedIn: 		boolean,
-	user: 			string,
-	title: 			string,
-	id: 			number,
-	pfp: 			string,
-	isAdmin: 		boolean,
-	useTranslit: 	boolean,
-	accessToken: 	string
-}
+import useStore from '../stores';
 
-interface IProps {
-	loginInfo: 		userInfo;
-	setWarning: 	any;
-}
+function ScoreUpload() {
+	
+	const user = useStore((state) => state.user);
 
-function ScoreUpload({ loginInfo, setWarning }: IProps) {
+	const setWarning = useStore((state) => state.setWarning);
 
 	const [processState, setProcessState] = useState<number>(0); // 0 - default, 1 - loading, 2 - recieved updates
 	const [scoreUpdates, setScoreUpdates] = useState<Update[]>([]);
@@ -93,7 +83,7 @@ function ScoreUpload({ loginInfo, setWarning }: IProps) {
 											cmod: sc["Modifiers"]["_text"].startsWith('C'),
 
 											date: sc["DateTime"]["_text"],
-											uid: loginInfo.id,
+											uid: user.id,
 										});
 									}
 								})
@@ -116,7 +106,7 @@ function ScoreUpload({ loginInfo, setWarning }: IProps) {
 										cmod: score["Modifiers"]["_text"].startsWith('C'),
 
 										date: score["DateTime"]["_text"],
-										uid: loginInfo.id,
+										uid: user.id,
 									});
 								}
 							}
@@ -131,7 +121,7 @@ function ScoreUpload({ loginInfo, setWarning }: IProps) {
 						method: 'POST',
 						headers: {
 							'Content-Type': 'application/json',
-							'x-access-token': loginInfo.accessToken,
+							'x-access-token': user.accessToken,
 						},
 						body: JSON.stringify(tournamentScores),
 						})
@@ -172,7 +162,7 @@ function ScoreUpload({ loginInfo, setWarning }: IProps) {
 			}
 			reader.readAsDataURL(file);
 		});
-	}, [loginInfo.id]);
+	}, [user.id]);
 
 	return (
 		<div className = "submit-container">
@@ -180,7 +170,7 @@ function ScoreUpload({ loginInfo, setWarning }: IProps) {
 				<p className = "submit-container-title">Upload Scores</p>
 				<p className = "submit-container-info">Your Stats.xml can be found at [ITGM install location]\Save\LocalProfiles\[profile number]</p>
 			</div>
-			{loginInfo.loggedIn
+			{user.loggedIn
 				? <div>
 					{processState === 0 
 						// default

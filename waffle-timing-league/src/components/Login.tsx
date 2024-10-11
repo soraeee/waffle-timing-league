@@ -2,9 +2,16 @@
 import { useNavigate } from 'react-router-dom';
 import { useForm, SubmitHandler } from "react-hook-form";
 
-function Login(props: any) {
+import useStore from '../stores';
+
+function Login() {
 
 	const navigate = useNavigate();
+	
+	const user = useStore((state) => state.user);
+	const setUser = useStore((state) => state.setUser);
+
+	const setWarning = useStore((state) => state.setWarning);
 
 	interface Credentials {
 		username: string,
@@ -32,7 +39,7 @@ function Login(props: any) {
 						return response.json();
 					})
 					.then(data => {
-						props.setLoginInfo({
+						setUser({
 							loggedIn: true,
 							user: data.username,
 							title: data.title,
@@ -43,7 +50,7 @@ function Login(props: any) {
 							accessToken: data.accessToken
 						})
 						localStorage.setItem('accessToken', data.accessToken); // i don't know if this is a good idea but who cares
-						props.setWarning({enabled: true, message: "You are now logged in as " + data.username + ".", type: 0})
+						setWarning({enabled: true, message: "You are now logged in as " + data.username + ".", type: 0})
 						navigate("/");
 				});
 	}
@@ -51,7 +58,7 @@ function Login(props: any) {
 	return (
 		<div className = "auth-container">
 			<p className = "auth-title">welcome back</p>
-			{!props.loginInfo.loggedIn 
+			{!user.loggedIn 
 			? <>
 				<form onSubmit = {handleSubmit(onSubmit)} className = "auth-container-form">
 					<input 

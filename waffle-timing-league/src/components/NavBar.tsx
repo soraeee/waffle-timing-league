@@ -2,27 +2,37 @@
 import { NavLink, useNavigate } from 'react-router-dom';
 import ArrowDropDown from '../assets/arrowdropdown.svg?react';
 
-function NavBar (props: any) {
+import useStore from '../stores';
+
+function NavBar () {
 
 	const navigate = useNavigate();
+	
+	const user = useStore((state) => state.user);
+	const setUser = useStore((state) => state.setUser);
+
+	const setWarning = useStore((state) => state.setWarning);
 
 	const logout = () => {
-		props.setLoginInfo({
+		setUser({
 			loggedIn: false,
 			user: "",
+			title: "",
 			id: -1,
 			pfp: "https://i.imgur.com/scPEALU.png",
+			isAdmin: false,
+			useTranslit: true,
 			accessToken: ""
 		});
 		localStorage.setItem('accessToken', "");
 		console.log("Logged out");
-		props.setWarning({enabled: true, message: "You have logged out.", type: 0})
+		setWarning({enabled: true, message: "You have logged out.", type: 0})
 		navigate("/");
 	}
 
 	return (
 		<>
-			{props.loginInfo.loggedIn
+			{user.loggedIn
 				? <div className = "navbar">
 					<div className = "navbar-group" id = "nb-left">
 						<NavLink to = '/'><p>waffle timing league (ALPHA)</p></NavLink>
@@ -30,14 +40,14 @@ function NavBar (props: any) {
 						<NavLink to = '/leaderboard'><p>leaderboard</p></NavLink>
 						<NavLink to = '/charts'><p>charts</p></NavLink>
 						<NavLink to = '/submit'><p>submit scores</p></NavLink>
-						<NavLink to = {'/profile/' + props.loginInfo.id}><p>profile</p></NavLink>
+						<NavLink to = {'/profile/' + user.id}><p>profile</p></NavLink>
 					</div>
 					<div className = "navbar-group" id = "nb-right">
 						<div className = "navbar-usergroup">
-							<img src = {props.loginInfo.pfp}></img>
+							<img src = {user.pfp}></img>
 							<div className = "dropdown">
 								<div className = "dropdown-inner">
-									<p>{props.loginInfo.user}</p>
+									<p>{user.user}</p>
 									<ArrowDropDown />
 								</div>
 								<div className = "dropdown-content">
