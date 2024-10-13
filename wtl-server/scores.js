@@ -187,11 +187,11 @@ const addScores = async (req, res) => {
 
 					let noDropsOrMines = false // Check for no hold/roll drops or mines hit - dropping a hold/roll or hitting a mine makes the score ineligible for Quad
 					if ((holdsHit == curChart.holds_rolls_count) && (minesHit == 0)) noDropsOrMines = true;
-			
+					
 					if ((w7 == 0) && (w6 == 0) && (w5 == 0)) 			lampType += 1;			// FC (all Great and higher)
 					if ((lampType == 2) && (w4 == 0)) 					lampType += 1;			// FEC (all Excellent and higher)
 					if ((lampType == 3) && (w3 == 0) && noDropsOrMines) lampType += 1;			// Quad (all Fantastic and higher, no holds/rolls dropped or mines hit)
-					if (score.dpPercent == 100 && noDropsOrMines)		lampType = 5;			// Quint (100% DP/all blue Fantastics, no holds/rolls dropped or mines hit)
+					if (dpPercent == 100 && noDropsOrMines)		lampType = 5;			// Quint (100% DP/all blue Fantastics, no holds/rolls dropped or mines hit)
 
 					if (prevScore != null) {
 						let scoreUpdate = false;

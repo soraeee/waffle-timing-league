@@ -2,8 +2,13 @@
 import Info from '../assets/info.svg?react';
 import Close from '../assets/close.svg?react';
 
-function WarningModal(props: any) {
-	let infoClass: string = props.warning.type === 0 ? "warningmodal-info-0" : "warningmodal-info-1"
+import useStore from '../stores';
+
+function WarningModal() {
+	const warning = useStore((state) => state.warning);
+	const setWarning = useStore((state) => state.setWarning);
+
+	let infoClass: string = warning.type === 0 ? "warningmodal-info-0" : "warningmodal-info-1"
 	infoClass += " warningmodal-icon"
 
 	return (<>
@@ -11,9 +16,9 @@ function WarningModal(props: any) {
 			<div>
 				<Info className={infoClass} />
 			</div>
-			<p className = "warningmodal-text">{props.warning.message}</p>
+			<p className = "warningmodal-text">{warning.message}</p>
 			<div>
-				<Close onClick={() => props.setWarning({enabled: false, message: "", type: 0})} className = "warningmodal-close warningmodal-icon"/>
+				<Close onClick={() => setWarning({enabled: false, message: "", type: 0})} className = "warningmodal-close warningmodal-icon"/>
 			</div>
 		</div>
 	</>)

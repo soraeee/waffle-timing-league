@@ -63,7 +63,7 @@ function App() {
 		<div className="main">
 			<BrowserRouter>
 				<NavBar />
-            	{warning.enabled && <WarningModal warning = {warning} setWarning = {setWarning} />}
+            	{warning.enabled && <WarningModal />}
 				<Routes>
 					<Route path="/" element={<HomePage />} />
 					<Route path="/login" element={<Login />} />
