@@ -183,7 +183,7 @@ function ScoreCard({score, index, activeCard, setActiveCard, useTranslit}: IProp
 					</div>
 					
 					<div className="scorecard-group">
-						<p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDay()}/{score.date.getFullYear()}</p>
+						<p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDate()}/{score.date.getFullYear()}</p>
 					</div>
 				</div>
 			}
