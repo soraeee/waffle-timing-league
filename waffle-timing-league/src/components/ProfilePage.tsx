@@ -186,6 +186,7 @@ function ProfilePage () {
 		
 		let scores: Score[] = displayedScores;
 		console.log(scores);
+		setActiveCard(-1);
 		setDisplayedScores(
 			scores.sort((a: Score, b: Score) => {
 				let titleA = a["title"];
