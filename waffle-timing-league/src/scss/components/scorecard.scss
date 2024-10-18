@@ -109,7 +109,7 @@
 	}
 
 	&-details {
-		@include mixin.flex($dir: column, $gap: 5px, $x-align: center, $align: center);
+		@include mixin.flex($dir: row, $gap: 60px, $x-align: center, $align: center);
 		width: 90%;
 		height: 75px;
 		background-color: color.$b-dark5;
@@ -125,6 +125,42 @@
 			&-title {
 				font-weight: 800;
 			}
+		}
+	}
+
+	&-option {
+		&-set {
+			margin: 0 0;
+			width: 0px;
+		}
+		&-button {
+			position: absolute;
+		}
+		&-tooltip {
+			opacity: 0;
+			font-size: 1.1em;
+			font-weight: 700;
+			width: 120px;
+			background-color: color.$b-dark4;
+			color: color.$lite;
+			text-align: center;
+			border-radius: 4px;
+			padding: 4px 0;
+			position: relative;
+			left: -46px;
+			top: -32px;
+			z-index: 4;
+			transition: opacity 0.15s, top 0.15s ease-in-out;
+			
+			user-select: none;
+			-moz-user-select: none;
+			-khtml-user-select: none;
+			-webkit-user-select: none;
+			-o-user-select: none;
+		}
+		&-button:hover + &-tooltip {
+			opacity: 1;
+			top: -34px;
 		}
 	}
 }

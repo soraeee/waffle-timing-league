@@ -156,7 +156,7 @@ function ChartLeaderboard() {
 		.then(data => {
 			const obj = JSON.parse(data);
 
-			if (!obj.hasOwnProperty("message")) {
+			if (!obj.hasOwnProperty("message")) { // should only have "message" key on a 404
 				// remove (Hard) (Medium) etc from title
 				let parsedTitle = obj.chart.title;
 				let parsedTitleTranslit = obj.chart.title_translit;

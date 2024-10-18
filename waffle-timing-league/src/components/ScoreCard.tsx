@@ -1,3 +1,10 @@
+/// <reference types="vite-plugin-svgr/client" />
+import ListIcon from '../assets/list.svg?react';
+import NoteAddIcon from '../assets/noteadd.svg?react';
+import UserIcon from '../assets/user.svg?react';
+
+import { NavLink } from 'react-router-dom';
+
 // Used for ProfilePage.tsx
 interface ProfileScore {
 	id:					number; // score id?
@@ -122,75 +129,91 @@ function ScoreCard({score, index, activeCard, setActiveCard, useTranslit}: IProp
 
 	return (
 		<div className = "scorecard-wrapper">
-			{isProfileScore(score) ?
-				<div key={score.id} className="scorecard" onClick = {toggleActive}>
-					{/* Profile page score card */}
-					<div className="scorecard-rank">
-						{score.rank != null
-							? <p className="scorecard-rank-text">{score.rank}</p>
-							: <p className="scorecard-rank-text">-</p>
-						}
-					</div>
-					<div className = {lampClass}></div>
-					<div className= {diffClass}>
-						<p className="scorecard-difficulty-text">
-							{score.difficulty}
-						</p>
-					</div>
-					<div className="scorecard-titlegroup">
-						<p className="scorecard-title">{(useTranslit && parsedTitleTranslit) ? parsedTitleTranslit : parsedTitle}</p>
-						<p className="scorecard-subtitle">{(useTranslit && score.subtitleTranslit) ? score.subtitleTranslit : score.subtitle}</p>
-					</div>
-					
-					<div className="scorecard-group">
-						{score.rank != null
-							? <p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
-							: <p className="scorecard-stats-text" id="dp">-%</p>
-						}
-					</div>
-					
-					<div className="scorecard-group">
-						{score.rank != null
-							? <p className="scorecard-stats-text" id="points">{score.points} pts.</p>
-							: <p className="scorecard-stats-text" id="points">- pts.</p>
-						}
-					</div>
-					
-					<div className="scorecard-group">
-						{score.rank != null
-							? <p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDay()}/{score.date.getFullYear()}</p>
-							: <p className="scorecard-stats-text" id="date">-/-/-</p>
-						}
-					</div>
+			{isProfileScore(score)
+			? <div key={score.id} className="scorecard" onClick = {toggleActive}>
+				{/* Profile page score card */}
+				<div className="scorecard-rank">
+					{score.rank != null
+						? <p className="scorecard-rank-text">{score.rank}</p>
+						: <p className="scorecard-rank-text">-</p>
+					}
 				</div>
+				<div className = {lampClass}></div>
+				<div className= {diffClass}>
+					<p className="scorecard-difficulty-text">
+						{score.difficulty}
+					</p>
+				</div>
+				<div className="scorecard-titlegroup">
+					<p className="scorecard-title">{(useTranslit && parsedTitleTranslit) ? parsedTitleTranslit : parsedTitle}</p>
+					<p className="scorecard-subtitle">{(useTranslit && score.subtitleTranslit) ? score.subtitleTranslit : score.subtitle}</p>
+				</div>
+					
+				<div className="scorecard-group">
+					{score.rank != null
+						? <p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
+						: <p className="scorecard-stats-text" id="dp">-%</p>
+					}
+				</div>
+					
+				<div className="scorecard-group">
+					{score.rank != null
+						? <p className="scorecard-stats-text" id="points">{score.points} pts.</p>
+						: <p className="scorecard-stats-text" id="points">- pts.</p>
+					}
+				</div>
+					
+					<div className="scorecard-group">
+						{score.rank != null
+						? <p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDay()}/{score.date.getFullYear()}</p>
+						: <p className="scorecard-stats-text" id="date">-/-/-</p>
+					}
+				</div>
+			</div>
 				
-				: <div key={score.id} className="chartscorecard" onClick = {toggleActive}> 
-					{/* Chart page score card */}
-					<div className="scorecard-rank">
-						<p className="scorecard-rank-text">{score.rank}</p>
-					</div>
-					<div className = {lampClass}></div>
-					<div className="scorecard-group">
-						<p className = "chartscorecard-username-text">{score.username}</p>
-					</div>
+			: <div key={score.id} className="chartscorecard" onClick = {toggleActive}> 
+				{/* Chart page score card */}
+				<div className="scorecard-rank">
+					<p className="scorecard-rank-text">{score.rank}</p>
+				</div>
+				<div className = {lampClass}></div>
+				<div className="scorecard-group">
+					<p className = "chartscorecard-username-text">{score.username}</p>
+				</div>
 					
-					<div className="scorecard-group">
-						<p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
-					</div>
+				<div className="scorecard-group">
+					<p className="scorecard-stats-text" id="dp">{score.dpPercent}%</p>
+				</div>
 					
-					<div className="scorecard-group">
-						<p className="scorecard-stats-text" id="points">{score.points} pts.</p>
-					</div>
+				<div className="scorecard-group">
+					<p className="scorecard-stats-text" id="points">{score.points} pts.</p>
+				</div>
 					
-					<div className="scorecard-group">
-						<p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDate()}/{score.date.getFullYear()}</p>
-					</div>
+				<div className="scorecard-group">
+					<p className="scorecard-stats-text" id="date">{score.date.getMonth()+1}/{score.date.getDate()}/{score.date.getFullYear()}</p>
+				</div>
 				</div>
 			}
 
-			
 			{activeCard == index 
 			? <div className = "scorecard-details">
+				{isProfileScore(score)
+				? <div className = "scorecard-option">
+					<div className = "scorecard-option-set">
+						<div className = "scorecard-option-button">
+							<NavLink to = {'/chart/' + score.id}><ListIcon /></NavLink>
+						</div>
+						<p className="scorecard-option-tooltip">Chart Page</p>
+					</div> 
+				</div>
+				: <div className = "scorecard-option">
+					<div className = "scorecard-option-set">
+						<div className = "scorecard-option-button">
+							<NavLink to = {'/user/' + score.uid}><UserIcon /></NavLink>
+						</div>
+						<p className="scorecard-option-tooltip">User Profile</p>
+					</div> 
+				</div>}
 				<div className = "scorecard-details-judges">
 					<div className = "scorecard-details-judges-group">
 						<p className = "scorecard-details-judges-title jud-fa">Fa+</p>
